@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/font-awesome.css" />
+  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/darkmode.js"></script>
+
+  <title>Reddit</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg sticky-top border-bottom navbar-sticky" id="navbar">
+
+    <div class="container-fluid px-5">
+      <a class="navbar-brand" href="index.html">
+        <img id="brand" src="images/angular-logo.png" alt="" width="100" />
+        <img id="brand-sm" src="images/angular-logo-sm.png" alt="" width="30" />
+      </a>
+      <a href="#sidenav" class="mobile-header" aria-controls="sidenav" role="button" data-bs-toggle="offcanvas">
+        <i class="fa-solid fa-bars fa-xl"></i>
+      </a>
+
+      <ul class="navbar-nav ms-auto hstack gap-3">
+        <li class="nav-item">
+          <i class="fa-regular fa-moon fa-xl" id="darkModeSwitch" style="color: #4963C1;"></i>
+        </li>
+
+        <li class="dropdown">
+          <a class="nav-link dropdown-toggle arrow-none nav-user px-2" data-bs-toggle="dropdown" href="#" role="button"
+            aria-haspopup="false" aria-expanded="false">
+            <span class="account-user-avatar">
+              <img src="images/users/avatar-1.jpg" alt="user-image" width="32" class="rounded-circle">
+              <span class="mx-2 fullname d-sm-inline d-none fs-5">Tosha Minner</span>
+            </span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated profile-dropdown">
+
+            <a href="user-profile.html" class="dropdown-item">
+              <i class="ri-account-circle-line fs-18 align-middle me-1"></i>
+              <span>My Account</span>
+            </a>
+
+            <a href="auth-logout-2.php" class="dropdown-item">
+              <i class="ri-logout-box-line fs-18 align-middle me-1"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3 col-lg-2">
+        <div class="position-fixed">
+          <nav id="sidebar-default">
+            <div class="p-2">
+              <div class="menu my-5">
+                <div class="item active">
+                  <a href="index.html">
+                    <div class="icon">
+                      <i class="fa-solid fa-home fa-xl"></i>
+                    </div>
+                    Home
+                  </a>
+                </div>
+                <div class="item">
+                  <a href="contribution-files.html">
+                    <div class="icon">
+                      <i class="fa-solid fa-folder-open fa-xl"></i>
+                    </div>
+                    My Contributions
+                  </a>
+                </div>
+                <div class="item">
+                  <a href="content-policy.html">
+                    <div class="icon">
+                      <i class="fa-solid fa-file-circle-exclamation fa-xl"></i>
+                    </div>
+                    Content Policy
+                  </a>
+                </div>
+                <div class="item">
+                  <a href="user-agreement.html">
+                    <div class="icon">
+                      <i class="fa-solid fa-user-lock fa-xl"></i>
+                    </div>
+                    User Agreement
+                  </a>
+                </div>
+                <div class="item">
+                  <a href="help.html">
+                    <div class="icon">
+                      <i class="fa-solid fa-circle-question fa-xl"></i>
+                    </div>
+                    Help
+                  </a>
+                </div>
+              </div>
+              <div class="mb-5 copyright">
+                <p class="text-primary px-md copyright-desc">Reddit, Inc. © 2024. All rights reserved.</p>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-9 col-lg-7">
+        <!-- Page Content  -->
+        <div id="content" class="p-4 p-md-5 pt-5">
+          <!-- Sliders -->
+          <h2 class="fw-semibold fst-italic text-center">Has found 5 results with keyword <span class="keyword">'Graphic
+              Design'</span></h2>
+
+          <div class="list-contributions mt-5">
+            <div class="contribution-item mb-3">
+              <a href="detail.html">
+                <div class="card mb-3 p-3">
+                  <div class="row g-1">
+                    <div class="col-4">
+                      <div class="card-body">
+                        <img
+                          src="https://preview.redd.it/master-yi-legendary-v0-mftfq46d911c1.png?width=500&format=png&auto=webp&s=f44d19df32820d3732b084ef010620ada703d5ee"
+                          class="img-fluid rounded-start card-img" alt="...">
+                      </div>
+                    </div>
+                    <div class="col-8">
+                      <div class="card-body">
+                        <h3 class="card-title fw-semibold">Do people know how to play this game or do they simply skim
+                          through it?
+                        </h3>
+                        <p class="card-desc mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae
+                          minus quam atque dolore iure, ipsam a molestias blanditiis quod saepe dolor laudantium ipsa
+                          aut,
+                          veritatis inventore reiciendis sequi deleniti nihil!</p>
+                        <p class="card-author"><span>Yasuo</span> - <span>March 3rd, 2024</span></p>
+                        <div class="hstack gap-5">
+                          <div class="like-box hstack gap-3 ms-auto">
+                            <span><i class="fa-solid fa-heart fa-xl" style="color: #FC6589;"></i></span>
+                            <span class="stats-num">50</span>
+                          </div>
+                          <span class="share-btn"><i class="fa-solid fa-share-nodes fa-xl"
+                              style="color: #95A4DB;"></i></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+              <!-- Horizontal line -->
+              <hr>
+            </div>
+
+
+            <div class="contribution-item mb-3">
+              <a href="detail.html">
+                <div class="card mb-3 p-3">
+                  <div class="row g-1">
+                    <div class="col-4">
+                      <div class="card-body">
+                        <img
+                          src="https://image.api.playstation.com/vulcan/img/rnd/202104/2507/Xdncb153Sz5UZMaF0X944NP5.png"
+                          class="img-fluid rounded-start card-img" alt="...">
+                      </div>
+                    </div>
+                    <div class="col-8">
+                      <div class="card-body">
+                        <h3 class="card-title fw-semibold">Genshin Impact Long-Term Project Launch: Concept Trailer |
+                          Genshin Impact
+                        </h3>
+                        <p class="card-desc mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae
+                          minus quam atque dolore iure, ipsam a molestias blanditiis quod saepe dolor laudantium ipsa
+                          aut,
+                          veritatis inventore reiciendis sequi deleniti nihil!</p>
+                        <p class="card-author"><span>Yasuo</span> - <span>March 3rd, 2024</span></p>
+                        <div class="hstack gap-5">
+                          <div class="like-box hstack gap-3 ms-auto">
+                            <span><i class="fa-solid fa-heart fa-xl" style="color: #FC6589;"></i></span>
+                            <span class="stats-num">50</span>
+                          </div>
+                          <span class="share-btn"><i class="fa-solid fa-share-nodes fa-xl"
+                              style="color: #95A4DB;"></i></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <!-- Horizontal line -->
+              <hr>
+            </div>
+
+
+            <div class="contribution-item mb-3">
+              <a href="detail.html">
+                <div class="card mb-3 p-3">
+                  <div class="row g-1">
+                    <div class="col-4">
+                      <div class="card-body">
+                        <img
+                          src="https://preview.redd.it/ai9y8xatmby61.jpg?auto=webp&s=1f2b94dd426563964c2e03451e8686f24b3e41cd"
+                          class="img-fluid rounded-start card-img" alt="...">
+                      </div>
+                    </div>
+                    <div class="col-8">
+                      <div class="card-body">
+                        <h3 class="card-title fw-semibold">PC Gamer names Valheim: Game Of the Year
+                        </h3>
+                        <p class="card-desc mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae
+                          minus quam atque dolore iure, ipsam a molestias blanditiis quod saepe dolor laudantium ipsa
+                          aut,
+                          veritatis inventore reiciendis sequi deleniti nihil!</p>
+                        <p class="card-author"><span>Yasuo</span> - <span>March 3rd, 2024</span></p>
+                        <div class="hstack gap-5">
+                          <div class="like-box hstack gap-3 ms-auto">
+                            <span><i class="fa-solid fa-heart fa-xl" style="color: #FC6589;"></i></span>
+                            <span class="stats-num">50</span>
+                          </div>
+                          <span class="share-btn"><i class="fa-solid fa-share-nodes fa-xl"
+                              style="color: #95A4DB;"></i></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <!-- Horizontal line -->
+              <hr>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="position-fixed">
+          <div class="right-sidebar pe-3">
+            <div class="menu my-5">
+              <div class="item">
+                <i class="fa-regular fa-landmark fa-lg"></i>
+                Contributions of Faculty
+              </div>
+              <div id="faculty-collapse">
+                <ul class="list-group falculty-lists mt-3">
+                  <li class="list-group-item"><a href="search-result.html">
+                      <div class="icon">
+                        <i class="fa-solid fa-business-time fa-lg"></i>
+                      </div>
+                      Business Management
+                    </a>
+                  </li>
+                  <li class="list-group-item">
+                    <a href="search-result.html">
+                      <div class="icon">
+                        <i class="fa-solid fa-computer fa-lg"></i>
+                      </div>
+                      Information Technology
+                    </a>
+                  </li>
+                  <li class="list-group-item"><a href="search-result.html">
+                      <div class="icon">
+                        <i class="fa-solid fa-object-ungroup fa-lg"></i>
+                      </div>
+                      Graphic Design
+                    </a></li>
+                  <li class="list-group-item"><a href="search-result.html">
+                      <div class="icon">
+                        <i class="fa-solid fa-chart-simple fa-lg"></i>
+                      </div>
+                      Marketing
+                    </a>
+                  </li>
+                  <li class="list-group-item"><a href="search-result.html">
+                      <div class="icon">
+                        <i class="fa-solid fa-calendar-days fa-lg"></i>
+                      </div>
+                      Event Management
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="sidenav" aria-labelledby="sidenavLabel">
+    <div class="offcanvas-body">
+      <nav id="sidebar-mobile">
+        <div class="p-2">
+          <div class="menu my-5">
+            <div class="item active">
+              <a href="#">
+                <div class="icon">
+                  <i class="fa-solid fa-home fa-xl"></i>
+                </div>
+                Home
+              </a>
+            </div>
+            <div class="item">
+              <a href="contribution-files.html">
+                <div class="icon">
+                  <i class="fa-solid fa-folder-open fa-xl"></i>
+                </div>
+                My Contributions
+              </a>
+            </div>
+            <div class="item">
+              <a href="content-policy.html">
+                <div class="icon">
+                  <i class="fa-solid fa-file-circle-exclamation fa-xl"></i>
+                </div>
+                Content Policy
+              </a>
+            </div>
+            <div class="item">
+              <a href="#">
+                <div class="icon">
+                  <i class="fa-solid fa-user-lock fa-xl"></i>
+                </div>
+                User Agreement
+              </a>
+            </div>
+            <div class="item">
+              <a href="help.html">
+                <div class="icon">
+                  <i class="fa-solid fa-circle-question fa-xl"></i>
+                </div>
+                Help
+              </a>
+            </div>
+          </div>
+          <div class="mb-5 copyright">
+            <p class="text-primary px-md copyright-desc">Reddit, Inc. © 2024. All rights reserved.</p>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  </div>
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/popper.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>
