@@ -20,13 +20,13 @@
                     </div>
 
                     <div class="form-floating">
-                        <select class="form-select" id="coordinatorEdit" aria-label="coordinatorEdit" name="coordinator_id">
+                        <select class="form-select" id="coordinatorEdit" aria-label="coordinatorEdit"
+                            name="coordinator_id">
                             <option selected value="">None</option>
-                            <option value="0">Tiger Nixon</option>
-                            <option value="1">Garrett Winters</option>
-                            <option value="2">Ashton Cox</option>
-                            <option value="3">Cedric Kelly</option>
-                            <option value="4">Brielle Williamson</option>
+                            @foreach ($coordinatorsAvailable as $coordinatorAvailable)
+                                <option value={{ $coordinatorAvailable->id }}>
+                                    {{ $coordinatorAvailable->fullname }}</option>;
+                            @endforeach
                         </select>
                         <label for="coordinatorEdit">Coordinator</label>
                     </div>

@@ -32,24 +32,34 @@
                             <h4 class="header-title">Add Faculty</h4>
                             <div id="content" class="p-3">
                                 <!-- Content -->
-                                <form action="" method="post" id="add-contribution">
+                                <form action="{{ route('admin.faculty.store') }}" method="post" id="add-contribution">
+                                    @csrf
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="facultyName" name="name">
+                                        <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                            id="facultyName" name="name">
+                                        @error('name')
+                                            <small class="form-text text-danger">{{ $message }}</small>
+                                        @enderror
                                         <label for="facultyName">Faculty Name <span class="text-danger">*</span></label>
                                     </div>
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="facultyName" name="short_name">
+                                        <input type="text" class="form-control @error('short_name') is-invalid @enderror"
+                                            id="facultyName" name="short_name">
+                                        @error('short_name')
+                                            <small class="form-text text-danger">{{ $message }}</small>
+                                        @enderror
                                         <label for="facultyName">Faculty Short Name <span
                                                 class="text-danger">*</span></label>
                                     </div>
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" id="coordinatorEdit" aria-label="coordinatorEdit" name="coordinator_id">
-                                            <option selected value="">None</option>
-                                            <option value="0">Tiger Nixon</option>
-                                            <option value="1">Garrett Winters</option>
-                                            <option value="2">Ashton Cox</option>
-                                            <option value="3">Cedric Kelly</option>
-                                            <option value="4">Brielle Williamson</option>
+                                        <select class="form-select" id="coordinatorEdit" aria-label="coordinatorEdit"
+                                            name="coordinator_id">
+                                            <option value="">None</option>
+                                            @foreach ($coordinatorsAvailable as $coordinatorAvailable)
+                                                <option value={{ $coordinatorAvailable->id }}>
+                                                    {{ $coordinatorAvailable->fullname }}</option>;
+                                            @endforeach
+
                                         </select>
                                         <label for="coordinatorEdit">Coordinator</label>
                                     </div>
@@ -76,106 +86,31 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Marketing</td>
-                                        <td>Marketing</td>
-                                        <td>Tiger Nixon</td>
-                                        <td>
-                                            <i class="ri-more-2-fill px-3" data-bs-toggle="dropdown" aria-expanded="false">
-                                            </i>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" data-bs-toggle="modal"
-                                                        data-bs-target="#facultyEditModal" data-facultyName="Marketing"
-                                                        data-shortName="Marketing" data-coordinator="0">Update</a></li>
-                                                <li><a class="dropdown-item" data-bs-toggle="modal"
-                                                        data-bs-target="#facultyDeleteModal" data-facultyName="Marketing"
-                                                        data-facultyId="1">Delete</a></li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Business Administration</td>
-                                        <td>Business</td>
-                                        <td>Garrett Winters</td>
-                                        <td>
-                                            <i class="ri-more-2-fill px-3" data-bs-toggle="dropdown" aria-expanded="false">
-                                            </i>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" data-bs-toggle="modal"
-                                                        data-bs-target="#facultyEditModal"
-                                                        data-facultyName="Business Administration" data-shortName="Business"
-                                                        data-coordinator="1">Update</a></li>
-                                                <li><a class="dropdown-item" data-bs-toggle="modal"
-                                                        data-bs-target="#facultyDeleteModal"
-                                                        data-facultyName="Business Administration"
-                                                        data-facultyId="2">Delete</a></li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Information Technology</td>
-                                        <td>IT</td>
-                                        <td>Ashton Cox</td>
-                                        <td>
-                                            <i class="ri-more-2-fill px-3" data-bs-toggle="dropdown" aria-expanded="false">
-                                            </i>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" data-bs-toggle="modal"
-                                                        data-bs-target="#facultyEditModal"
-                                                        data-facultyName="Information Technology" data-shortName="IT"
-                                                        data-coordinator="2">Update</a></li>
-                                                <li><a class="dropdown-item" data-bs-toggle="modal"
-                                                        data-bs-target="#facultyDeleteModal"
-                                                        data-facultyName="Information Technology"
-                                                        data-facultyId="3">Delete</a></li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>Graphic Design</td>
-                                        <td>Design</td>
-                                        <td>Cedric Kelly</td>
-                                        <td>
-                                            <i class="ri-more-2-fill px-3" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                            </i>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" data-bs-toggle="modal"
-                                                        data-bs-target="#facultyEditModal"
-                                                        data-facultyName="Graphic Design" data-shortName="Design"
-                                                        data-coordinator="3">Update</a></li>
-                                                <li><a class="dropdown-item" data-bs-toggle="modal"
-                                                        data-bs-target="#facultyDeleteModal"
-                                                        data-facultyName="Graphic Design" data-facultyId="4">Delete</a>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>Event Management</td>
-                                        <td>Event</td>
-                                        <td>Brielle Williamson</td>
-                                        <td>
-                                            <i class="ri-more-2-fill px-3" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                            </i>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" data-bs-toggle="modal"
-                                                        data-bs-target="#facultyEditModal"
-                                                        data-facultyName="Event Management" data-shortName="Event"
-                                                        data-coordinator="4">Update</a></li>
-                                                <li><a class="dropdown-item" data-bs-toggle="modal"
-                                                        data-bs-target="#facultyDeleteModal"
-                                                        data-facultyName="Event Management" data-facultyId="5">Delete</a>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    </tr>
+                                    @foreach ($faculties as $faculty)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $faculty->name }}</td>
+                                            <td>{{ $faculty->short_name }}</td>
+                                            <td>{{ $faculty->coordinator_id }}</td>
+                                            <td>
+                                                <i class="ri-more-2-fill px-3" data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                </i>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" data-bs-toggle="modal"
+                                                            data-bs-target="#facultyEditModal"
+                                                            data-facultyName="{{ $faculty->name }}"
+                                                            data-shortName="{{ $faculty->short_name }}"
+                                                            data-coordinator="{{ $faculty->coordinator_id }}">Update</a>
+                                                    </li>
+                                                    <li><a class="dropdown-item" data-bs-toggle="modal"
+                                                            data-bs-target="#facultyDeleteModal"
+                                                            data-facultyName="{{ $faculty->name }}"
+                                                            data-facultyId="{{ $faculty->id }}">Delete</a></li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
 

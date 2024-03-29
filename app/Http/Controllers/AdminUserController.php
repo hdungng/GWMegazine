@@ -52,7 +52,7 @@ class AdminUserController extends Controller
             'password' => 'required|string|min:8',
             'role_id' => 'required|string|not_in:',
             'avatar' => 'image|mimes:png,jpg,jpeg|square',
-            'faculty_id' => ['string', Rule::requiredIf(in_array($request->role_id, [UserRoleEnum::STUDENT, UserRoleEnum::GUEST])),],
+            'faculty_id' => [Rule::requiredIf(in_array($request->role_id, [UserRoleEnum::STUDENT, UserRoleEnum::GUEST])),],
         ], [
             'required' => ":attribute is required",
             'min' => ":attribute must be at least :min characters long",
@@ -104,18 +104,23 @@ class AdminUserController extends Controller
         if ($request->role_id == UserRoleEnum::COORDINATOR) {
             // 
             if ($request->has('faculty_id')) {
-                $faculty = Faculty::find($request->faculty_id);
 
-                $faculty->coordinator_id = $userSavedId;
+                if (!empty($request->faculty_id)) {
+                    $faculty = Faculty::find($request->faculty_id);
 
-                $facultyAssigned = $faculty;
-                $faculty->save();
+                    if ($faculty) {
+                        $faculty->coordinator_id = $userSavedId;
 
-                ActivityLog::create([
-                    'id' => Str::uuid(),
-                    'content' => 'Assign ' . $userSavedName .  ' to ' . $facultyAssigned->name . ' successfully!',
-                    'user_id' => Auth::user()->id,
-                ]);
+                        $facultyAssigned = $faculty;
+                        $faculty->save();
+
+                        ActivityLog::create([
+                            'id' => Str::uuid(),
+                            'content' => 'Assign ' . $userSavedName .  ' to ' . $facultyAssigned->name . ' successfully!',
+                            'user_id' => Auth::user()->id,
+                        ]);
+                    }
+                }
             }
         }
 
