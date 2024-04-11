@@ -30,15 +30,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	// Set the data-bs-theme attribute based on the theme value
 	if (theme === 'dark') {
 		document.documentElement.setAttribute('data-bs-theme', 'dark');
-		darkModeSwitch.classList.remove('fa-moon');
-		darkModeSwitch.classList.add('fa-sun');
 		navTheme.classList.add('bg-dark')
 
 	} else {
 		// Default to 'light' if the theme is not set or if it's not 'dark'
 		document.documentElement.setAttribute('data-bs-theme', 'light');
-		darkModeSwitch.classList.add('fa-moon');
-		darkModeSwitch.classList.remove('fa-sun');
 		navTheme.classList.add('bg-light')
 	}
 
@@ -53,16 +49,12 @@ darkModeSwitch.addEventListener('click', function () {
 	let theme = localStorage.getItem('theme');
 
 	if (theme === 'light') {
-		darkModeSwitch.classList.remove('fa-moon');
-		darkModeSwitch.classList.add('fa-sun');
 		localStorage.setItem('theme', 'dark')
 		document.documentElement.setAttribute('data-bs-theme', 'dark');
 		navTheme.classList.remove('bg-light');
 		navTheme.classList.add('bg-dark');
 	}
 	else {
-		darkModeSwitch.classList.add('fa-moon');
-		darkModeSwitch.classList.remove('fa-sun');
 		localStorage.setItem('theme', 'light')
 		document.documentElement.setAttribute('data-bs-theme', 'light');
 		navTheme.classList.remove('bg-dark');

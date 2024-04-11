@@ -16,16 +16,16 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home.main-page');
-Route::get('/public-contribution/{id}', [App\Http\Controllers\HomeController::class, 'detail'])->name('home.detail')->middleware('role.acccess');
-Route::get('/public-contribution/faculty/{id}', [App\Http\Controllers\HomeController::class, 'filterByFaculty'])->name('home.filterByFaculty')->middleware('role.acccess');
+Route::get('/home-contribution/{id}', [App\Http\Controllers\HomeController::class, 'detail'])->name('home.detail');
+Route::get('/home-contribution/faculty/{id}', [App\Http\Controllers\HomeController::class, 'filterByFaculty'])->name('home.filterByFaculty');
 
 
 Route::prefix('contributions')->middleware('role.auth:Student')->group(function () {
-    Route::get('/{id}', [App\Http\Controllers\HomeContributionController::class, 'index'])->name('home.contributions.index');
+    Route::get('', [App\Http\Controllers\HomeContributionController::class, 'index'])->name('home.contributions.index');
     Route::get('/create', [App\Http\Controllers\HomeContributionController::class, 'create'])->name('home.contributions.create');
     Route::get('/detail/{id}', [App\Http\Controllers\HomeContributionController::class, 'detail'])->name('home.contributions.detail');
-    Route::post('/store', [App\Http\Controllers\HomeContributionController::class, 'store'])->name('home.contributions.store');
     Route::get('/edit/{id}', [App\Http\Controllers\HomeContributionController::class, 'edit'])->name('home.contributions.edit');
+    Route::post('/store', [App\Http\Controllers\HomeContributionController::class, 'store'])->name('home.contributions.store');
     Route::post('/comment/{id}', [App\Http\Controllers\HomeContributionController::class, 'comment'])->name('home.contributions.comment');
     Route::post('/update/{id}', [App\Http\Controllers\HomeContributionController::class, 'update'])->name('home.contributions.update');
     Route::post('/delete', [App\Http\Controllers\HomeContributionController::class, 'delete'])->name('home.contributions.delete');
@@ -66,6 +66,7 @@ Route::prefix('admin')->middleware('role.auth:Root,Admin,Coordinator')->group(fu
         Route::get('/preview/{id}', [App\Http\Controllers\AdminContributionController::class, 'preview'])->name('admin.contributions.preview');
         Route::get('/edit/{id}', [App\Http\Controllers\AdminContributionController::class, 'edit'])->name('admin.contributions.edit');
         Route::post('/comment/{id}', [App\Http\Controllers\AdminContributionController::class, 'comment'])->name('admin.contributions.comment');
+        Route::post('/publish', [App\Http\Controllers\AdminContributionController::class, 'publish'])->name('admin.contributions.publish');
         Route::post('/update/{id}', [App\Http\Controllers\AdminContributionController::class, 'update'])->name('admin.contributions.update');
         Route::post('/delete', [App\Http\Controllers\AdminContributionController::class, 'delete'])->name('admin.contributions.delete');
     });
@@ -88,13 +89,6 @@ Route::prefix('admin')->middleware('role.auth:Root,Admin,Coordinator')->group(fu
         Route::post('/update', [App\Http\Controllers\AdminAcademicYearController::class, 'update'])->name('admin.academic-year.update');
         Route::post('/status', [App\Http\Controllers\AdminAcademicYearController::class, 'changeStatus'])->name('admin.academic-year.status');
         Route::post('/delete', [App\Http\Controllers\AdminAcademicYearController::class, 'delete'])->name('admin.academic-year.delete');
-    });
-
-
-    Route::prefix('role-permissions')->group(function () {
-        Route::get('/', [App\Http\Controllers\AdminRolePermissionController::class, 'index'])->name('admin.role-permission.index');
-        Route::get('/detail/{id}', [App\Http\Controllers\AdminRolePermissionController::class, 'detail'])->name('admin.role-permission.detail');
-        Route::post('/update/{id}', [App\Http\Controllers\AdminRolePermissionController::class, 'update'])->name('admin.role-permission.update');
     });
 
     Route::prefix('user-profile')->group(function () {

@@ -48,7 +48,8 @@
                             <div class="tab-content">
                                 <!-- end timeline content-->
                                 <div class="tab-pane show active" id="updateInfo">
-                                    <form class="mb-3">
+                                    <form class="mb-3" method="POST" enctype="multipart/form-data"
+                                        action="{{ route('home.profile.update-info', Auth::user()->id) }}">
                                         <h4 class="mb-5 text-uppercase fw-semibold">Personal Info</h4>
                                         <div class="row">
                                             <div class="col-md-6">
@@ -135,7 +136,7 @@
 
 @section('body.javascript')
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
-
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             FilePond.registerPlugin(
@@ -143,9 +144,16 @@
             );
 
             // Select the file input and use create() to turn it into a pond
-            FilePond.create(
-                document.getElementById('avatar')
-            );
+            $(document).ready(function() {
+                var avatarField = document.getElementById('avatar');
+
+                FilePond.create(
+                    avatarField, {
+                        storeAsFile: true,
+                    }
+                );
+            })
+
         });
     </script>
 @endsection

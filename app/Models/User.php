@@ -54,9 +54,14 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function faculty()
+    {
+        return $this->belongsTo(Faculty::class);
+    }
+
     public function isAdmin()
     {
-        $allowedRoles = ['Root', 'Admin', 'Coordinator'];
+        $allowedRoles = ['Admin', 'Manager', 'Coordinator'];
 
         return in_array($this->role->name, $allowedRoles);
     }

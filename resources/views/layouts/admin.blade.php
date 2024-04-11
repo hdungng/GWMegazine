@@ -70,92 +70,10 @@
                         </div>
                     </button>
 
-
-                    <div class="app-search dropdown d-none d-lg-block">
-                        <form>
-                            <div class="input-group">
-                                <input type="search" class="form-control dropdown-toggle" placeholder="Search..."
-                                    id="top-search">
-                                <span class="ri-search-line search-icon"></span>
-                            </div>
-                        </form>
-
-                        <div class="dropdown-menu dropdown-menu-animated dropdown-lg" id="search-dropdown">
-
-                            <div class="dropdown-header noti-title">
-                                <h5 class="text-overflow mb-1">Found <b class="text-decoration-underline">08</b> results
-                                </h5>
-                            </div>
-
-
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="ri-file-chart-line fs-16 me-1"></i>
-                                <span>Analytics Report</span>
-                            </a>
-
-
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="ri-lifebuoy-line fs-16 me-1"></i>
-                                <span>How can I help you?</span>
-                            </a>
-
-
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="ri-user-settings-line fs-16 me-1"></i>
-                                <span>User profile settings</span>
-                            </a>
-
-
-                            <div class="dropdown-header noti-title">
-                                <h6 class="text-overflow mt-2 mb-1 text-uppercase">Users</h6>
-                            </div>
-
-                            <div class="notification-list">
-
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <div class="d-flex">
-                                        <img class="d-flex me-2 rounded-circle"
-                                            src="{{ url('public/admin/images/users/avatar-2.jpg') }}"
-                                            alt="Generic placeholder image" height="32">
-                                        <div class="w-100">
-                                            <h5 class="m-0 fs-14">Erwin Brown</h5>
-                                            <span class="fs-12 mb-0">UI Designer</span>
-                                        </div>
-                                    </div>
-                                </a>
-
-
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <div class="d-flex">
-                                        <img class="d-flex me-2 rounded-circle"
-                                            src="{{ url('public/admin/images/users/avatar-5.jpg') }}"
-                                            alt="Generic placeholder image" height="32">
-                                        <div class="w-100">
-                                            <h5 class="m-0 fs-14">Jacob Deo</h5>
-                                            <span class="fs-12 mb-0">Developer</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <ul class="topbar-menu d-flex align-items-center gap-3">
-                    <li class="dropdown d-lg-none">
-                        <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#"
-                            role="button" aria-haspopup="false" aria-expanded="false">
-                            <i class="ri-search-line fs-22"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-animated dropdown-lg p-0">
-                            <form class="p-3">
-                                <input type="search" class="form-control" placeholder="Search ..."
-                                    aria-label="Recipient's username">
-                            </form>
-                        </div>
-                    </li>
-
-                    <li class="d-none d-sm-inline-block">
+                    <li class="d-sm-inline-block">
                         <div class="nav-link" id="light-dark-mode" data-bs-toggle="tooltip" data-bs-placement="left"
                             title="Theme Mode">
                             <i class="ri-moon-line fs-22"></i>
@@ -284,13 +202,6 @@
                         <a href="{{ route('admin.academic-year.index') }}" class="side-nav-link">
                             <i class="ri-calendar-event-fill"></i>
                             <span> Academic Year </span>
-                        </a>
-                    </li>
-
-                    <li class="side-nav-item">
-                        <a href="{{ route('admin.role-permission.index') }}" class="side-nav-link">
-                            <i class="ri-shield-user-fill"></i>
-                            <span> Role & Permissions </span>
                         </a>
                     </li>
                 </ul>

@@ -28,18 +28,18 @@
                             <!-- end form-check-->
                             <div class="clearfix"></div>
 
-                            <h4 class="mt-2">How to pass the exam with flying colors?</h4>
+                            <h4 class="mt-2">{{ $contribution->title }}</h4>
 
                             <div class="row">
                                 <div class="col-md-4">
                                     <!-- assignee -->
                                     <p class="mt-2 mb-1 text-muted">Submitted by</p>
                                     <div class="d-flex align-items-start">
-                                        <img src="{{ url('public/admin/images/users/avatar-9.jpg') }}" alt="Arya S"
+                                        <img src="{{ url($contribution->student_avatar) }}" alt="Arya S"
                                             class="rounded-circle me-2" height="24" />
                                         <div class="w-100">
                                             <h5 class="mt-1">
-                                                Jonathan Andrews
+                                                {{ $contribution->student_name }}
                                             </h5>
                                         </div>
                                     </div>
@@ -54,7 +54,7 @@
                                         <i class="ri-briefcase-line fs-18 text-success me-1"></i>
                                         <div class="w-100">
                                             <h5 class="mt-1">
-                                                Examron Envirenment
+                                                {{ $contribution->faculty_name }}
                                             </h5>
                                         </div>
                                     </div>
@@ -68,7 +68,7 @@
                                         <i class="ri-calendar-todo-line fs-18 text-success me-1"></i>
                                         <div class="w-100">
                                             <h5 class="mt-1">
-                                                20/11/2024 10:00:00
+                                                {{ (new DateTime($contribution->created_at))->format('F d, Y H:i:s') }}
                                             </h5>
                                         </div>
                                     </div>
@@ -85,40 +85,57 @@
                                     <tbody>
                                         <tr>
                                             <th>Contribution ID</th>
-                                            <td>ABCDEFGH0123456789</td>
+                                            <td>{{ $contribution->id }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Contribution Name</th>
-                                            <td>How to pass the exam with flying colors?</td>
+                                            <th>Contribution Title</th>
+                                            <td>{{ $contribution->title }}</td>
                                         </tr>
                                         <tr>
                                             <th>Submission status</th>
-                                            <td><span class="badge text-bg-warning fs-5 fw-normal">Not
-                                                    Yet</span></td>
+                                            <td>
+                                                @switch($contribution->status)
+                                                    @case(0)
+                                                        <span class="badge text-bg-warning">Pending</span>
+                                                    @break
+                                                    @case(1)
+                                                        <span class="badge text-bg-success">Published</span>
+                                                    @break
+                                                    @default
+                                                        <span class="badge text-bg-warning">Pending</span>
+                                                @endswitch
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <th>Due date</th>
-                                            <td>Sunday, 17 December 2023, 11:59 PM</td>
+                                            <th>Academic year</th>
+                                            <td>{{ $contribution->academic_year_name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Closure date</th>
+                                            <td>{{ (new DateTime($contribution->closure_date))->format('F d, Y H:i:s') }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Final closure date</th>
+                                            <td>{{ (new DateTime($contribution->final_closure_date))->format('F d, Y H:i:s') }}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th>Last modified</th>
-                                            <td>Thursday, 20 February 2024, 10:57 PM</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Contribution File</th>
-                                            <td><a class="contribution-link" href="#">yourwordfile.doc</a></td>
+                                            <td>{{ (new DateTime($contribution->updated_at))->format('F d, Y H:i:s') }}</td>
                                         </tr>
                                         <tr>
                                             <th>Edit</th>
                                             <td>
-                                                <a href="{{ route('admin.contributions.edit', 1) }}" class="btn btn-outline-primary">Edit
+                                                <a href="{{ route('admin.contributions.edit', $contribution->id) }}"
+                                                    class="btn btn-outline-primary">Edit
                                                     Contribution</a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>Preview</th>
                                             <td>
-                                                <a href="{{ route('admin.contributions.preview', 1) }}"
+                                                <a href="{{ route('admin.contributions.preview', $contribution->id) }}"
                                                     class="btn btn-outline-primary">Preview</a>
                                             </td>
                                         </tr>
@@ -136,4 +153,3 @@
         </div> <!-- container -->
     </div> <!-- content -->
 @endsection
-

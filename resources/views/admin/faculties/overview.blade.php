@@ -42,16 +42,27 @@
                                         @enderror
                                         <label for="facultyName">Faculty Name <span class="text-danger">*</span></label>
                                     </div>
-                                    <div class="form-floating mb-3">
+                                    <label for="facultyName" class="mb-2" data-bs-toggle="tooltip"
+                                        data-bs-placement="right"
+                                        data-bs-title="You must choose the color since the default is #000000 that will be error.">Chart
+                                        Label <span class="text-danger">*</span></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <input type="color" class="form-control form-control-color" id="chart_color"
+                                                title="Choose your color" name="chart_color" required>
+                                        </div>
                                         <input type="text" class="form-control @error('short_name') is-invalid @enderror"
                                             id="facultyName" name="short_name">
-                                        @error('short_name')
-                                            <small class="form-text text-danger">{{ $message }}</small>
-                                        @enderror
-                                        <label for="facultyName">Faculty Short Name <span
-                                                class="text-danger">*</span></label>
                                     </div>
-                                    <div class="form-floating mb-3">
+                                    @error('short_name')
+                                        <small class="form-text text-danger">{{ $message }}</small>
+                                    @enderror
+                                    @error('chart_color')
+                                        <small class="form-text text-danger d-block ">{{ $message }}</small>
+                                    @enderror
+
+                                    <div class="form-floating my-3">
                                         <select class="form-select" id="coordinatorEdit" aria-label="coordinatorEdit"
                                             name="coordinator_id">
                                             <option value="">None</option>
@@ -80,7 +91,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Faculty Name</th>
-                                        <th>Short Name</th>
+                                        <th>Chart Label</th>
                                         <th>Coordinator</th>
                                         <th>Action</th>
                                     </tr>
@@ -90,8 +101,10 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $faculty->name }}</td>
-                                            <td>{{ $faculty->short_name }}</td>
-                                            <td>{{ $faculty->coordinator_id }}</td>
+                                            <td class="d-flex justify-content-between">{{ $faculty->short_name }} <span
+                                                    class="btn p-2" style="background: {{ $faculty->chart_color }}"></span>
+                                            </td>
+                                            <td>{{ $faculty->coordinator_name }}</td>
                                             <td>
                                                 <i class="ri-more-2-fill px-3" data-bs-toggle="dropdown"
                                                     aria-expanded="false">
@@ -99,9 +112,12 @@
                                                 <ul class="dropdown-menu">
                                                     <li><a class="dropdown-item" data-bs-toggle="modal"
                                                             data-bs-target="#facultyEditModal"
+                                                            data-facultyId="{{ $faculty->id }}"
                                                             data-facultyName="{{ $faculty->name }}"
                                                             data-shortName="{{ $faculty->short_name }}"
-                                                            data-coordinator="{{ $faculty->coordinator_id }}">Update</a>
+                                                            data-chartColor="{{ $faculty->chart_color }}"
+                                                            data-currentCoordinatorId="{{ $faculty->coordinator_id }}"
+                                                            data-currentCoordinatorName="{{ $faculty->coordinator_name }}">Update</a>
                                                     </li>
                                                     <li><a class="dropdown-item" data-bs-toggle="modal"
                                                             data-bs-target="#facultyDeleteModal"
@@ -143,6 +159,11 @@
     </script>
 
     <script>
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+
+    <script>
         $(document).ready(function() {
             $('#scroll-horizontal-datatable_length').parent('.col-sm-12.col-md-6').hide();
         });
@@ -153,17 +174,42 @@
         facultyEditModal.addEventListener('show.bs.modal', function(event) {
             var updateLinkElement = event.relatedTarget; // updateLinkElement that triggered the modal
 
+            var facultyIdData = updateLinkElement.getAttribute('data-facultyId');
+
+            var currentCoordinatorIdData = updateLinkElement.getAttribute('data-currentCoordinatorId');
+            var currentCoordinatorNameData = updateLinkElement.getAttribute('data-currentCoordinatorName');
             var facultyNameData = updateLinkElement.getAttribute('data-facultyName');
             var shortNameData = updateLinkElement.getAttribute('data-shortName');
-            var coordinatorData = updateLinkElement.getAttribute('data-coordinator');
+            var chartColorData = updateLinkElement.getAttribute('data-chartColor');
 
+            var facultyIdEditControl = document.getElementById('facultyIdEdit');
             var facultyNameEditControl = document.getElementById('facultyNameEdit');
             var facultyShortNameEditControl = document.getElementById('facultyShortNameEdit');
+            var chartColorEditControl = document.getElementById('chartColorEdit');
             var coordinatorEditControl = document.getElementById('coordinatorEdit');
+            var currentCoordinatorOption = document.getElementById('currentCoordinatorOption');
 
+            // Get reference to the option you want to select (in this case, the second option)
+            var noneSelect = coordinatorEditControl.options[0];
+
+            facultyIdEditControl.value = facultyIdData;
             facultyNameEditControl.value = facultyNameData;
-            coordinatorEditControl.value = coordinatorData;
             facultyShortNameEditControl.value = shortNameData;
+            chartColorEditControl.value = chartColorData;
+
+            if (currentCoordinatorIdData && currentCoordinatorNameData) {
+                noneSelect.selected = false;
+                currentCoordinatorOption.style.display = "block";
+
+
+                currentCoordinatorOption.selected = true;
+                currentCoordinatorOption.value = currentCoordinatorIdData;
+                currentCoordinatorOption.textContent = currentCoordinatorNameData;
+            } else {
+                noneSelect.selected = true;
+                currentCoordinatorOption.selected = false;
+                currentCoordinatorOption.style.display = "none";
+            }
         });
 
 

@@ -18,7 +18,7 @@
     <nav class="navbar navbar-expand-lg sticky-top border-bottom navbar-sticky" id="navbar">
 
         <div class="container-fluid px-5">
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="{{ route('home.main-page') }}">
                 <img id="brand" src="{{ url('public/home/images/angular-logo.png') }}" alt=""
                     width="100" />
                 <img id="brand-sm" src="{{ url('public/home/images/angular-logo-sm.png') }}" alt=""
@@ -30,7 +30,7 @@
 
             <ul class="navbar-nav ms-auto hstack gap-3">
                 <li class="nav-item">
-                    <i class="fa-regular fa-moon fa-xl" id="darkModeSwitch" style="color: #4963C1;"></i>
+                    <i class="fa-regular fa-circle-half-stroke fa-xl" id="darkModeSwitch" style="color: #4963C1;"></i>
                 </li>
 
                 @if (Auth::check())
@@ -45,9 +45,9 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated profile-dropdown">
                             @if (auth()->user()->isAdmin())
-                                <a href="{{ route('admin.user-profile', Auth::user()->id) }}" class="dropdown-item">
+                                <a href="{{ route('admin.dashboard') }}" class="dropdown-item">
                                     <i class="ri-account-circle-line fs-18 align-middle me-1"></i>
-                                    <span>My Account</span>
+                                    <span>Admin View</span>
                                 </a>
                             @else
                                 <a href="{{ route('home.user-profile', Auth::user()->id) }}" class="dropdown-item">

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAcademicYearsTable extends Migration
+class CreateCommentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateAcademicYearsTable extends Migration
      */
     public function up()
     {
-        Schema::create('academic_years', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');            
+            $table->uuid('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->string('content', 500);
             $table->timestamps();
-            $table->timestamp('closure_date')->nullable();
-            $table->timestamp('final_closure_date')->nullable();
         });
     }
 
@@ -29,6 +29,6 @@ class CreateAcademicYearsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('academic_years');
+        Schema::dropIfExists('comments');
     }
 }

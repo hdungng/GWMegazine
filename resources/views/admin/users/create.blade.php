@@ -163,7 +163,7 @@
 
 
                     const ROLES_ENUM = Object.freeze({
-                        ADMIN: 'f98fd3df-e7e7-11ee-b3b3-dc21486e292b',
+                        MANAGER: 'f98fd3df-e7e7-11ee-b3b3-dc21486e292b',
                         COORDINATOR: '200e9da4-e7e8-11ee-b3b3-dc21486e292b',
                         STUDENT: '200eab09-e7e8-11ee-b3b3-dc21486e292b',
                         GUEST: '200eb6b6-e7e8-11ee-b3b3-dc21486e292b',

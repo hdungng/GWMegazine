@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Faculty extends Model
+class Comment extends Model
 {
     use HasFactory;
 
@@ -13,14 +13,8 @@ class Faculty extends Model
 
     protected $fillable = [
         'id',
-        'name',
-        'short_name',
-        'chart_color',
-        'coordinator_id',
+        'content',
+        'contribution_id',
+        'user_id'
     ];
-
-    public function users()
-    {
-        return $this->belongsToMany(User::class);
-    }
 }

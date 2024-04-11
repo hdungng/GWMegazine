@@ -42,6 +42,14 @@ class LoginController extends Controller
         }
     }
 
+    public function sendFailedLoginResponse(Request $request)
+    {
+        $message = 'Invalid username or password.';
+
+        return back()->withInput($request->only('email', '_token'))->withErrors(['email' => $message]);
+    }
+
+
     public function logout(Request $request)
     {
         Auth::logout();

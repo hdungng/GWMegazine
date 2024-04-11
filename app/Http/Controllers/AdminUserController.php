@@ -18,24 +18,63 @@ class AdminUserController extends Controller
     //
     public function index()
     {
-        $users = User::select('users.*', 'roles.name AS role_name')
-            ->selectRaw("CASE 
+
+        $users = null;
+
+        switch (Auth::user()->role->name) {
+            case "Admin":
+                $users = User::select('users.*', 'roles.name AS role_name')
+                    ->selectRaw("CASE 
                             WHEN roles.name IN ('Student', 'Guest') THEN faculties.name 
                             ELSE coordinator_faculty.name 
                         END AS faculty_name")
-            ->join('roles', 'users.role_id', '=', 'roles.id')
-            ->leftJoin('faculties', 'users.faculty_id', '=', 'faculties.id')
-            ->leftJoin('faculties as coordinator_faculty', 'users.id', '=', 'coordinator_faculty.coordinator_id')
-            ->orderBy('role_name', 'asc')
-            ->orderBy('users.created_at', 'desc')
-            ->get();
+                    ->join('roles', 'users.role_id', '=', 'roles.id')
+                    ->leftJoin('faculties', 'users.faculty_id', '=', 'faculties.id')
+                    ->leftJoin('faculties as coordinator_faculty', 'users.id', '=', 'coordinator_faculty.coordinator_id')
+                    ->orderBy('role_name', 'asc')
+                    ->orderBy('users.created_at', 'desc')
+                    ->get();
+                break;
+            case "Manager":
+                $users = User::select('users.*', 'roles.name AS role_name')
+                    ->selectRaw("CASE 
+                            WHEN roles.name IN ('Student', 'Guest') THEN faculties.name 
+                            ELSE coordinator_faculty.name 
+                        END AS faculty_name")
+                    ->join('roles', 'users.role_id', '=', 'roles.id')
+                    ->leftJoin('faculties', 'users.faculty_id', '=', 'faculties.id')
+                    ->leftJoin('faculties as coordinator_faculty', 'users.id', '=', 'coordinator_faculty.coordinator_id')
+                    ->whereNotIn('role_id', [UserRoleEnum::ADMIN, UserRoleEnum::MANAGER])
+                    ->orderBy('role_name', 'asc')
+                    ->orderBy('users.created_at', 'desc')
+                    ->get();
+                break;
+            case "Coordinator":
+                $users = User::select('users.*', 'roles.name AS role_name')
+                    ->selectRaw("CASE 
+                            WHEN roles.name IN ('Student', 'Guest') THEN faculties.name 
+                            ELSE coordinator_faculty.name 
+                        END AS faculty_name")
+                    ->join('roles', 'users.role_id', '=', 'roles.id')
+                    ->leftJoin('faculties', 'users.faculty_id', '=', 'faculties.id')
+                    ->leftJoin('faculties as coordinator_faculty', 'users.id', '=', 'coordinator_faculty.coordinator_id')
+                    ->whereIn('role_id', [ UserRoleEnum::STUDENT, UserRoleEnum::GUEST ])
+                    ->where('faculties.coordinator_id', '=', Auth::user()->id)
+                    ->orderBy('role_name', 'asc')
+                    ->orderBy('users.created_at', 'desc')
+                    ->get();
+
+                break;
+            default:
+                break;
+        }
 
         return view('admin.users.list', compact('users'));
     }
 
     public function create()
     {
-        $roles = Role::whereNotIn('name', ['Root'])->orderBy('created_at', 'asc')->get();
+        $roles = Role::whereNotIn('name', ['Admin'])->orderBy('created_at', 'asc')->get();
         $faculties = Faculty::all();
         $facultiesAvailable = Faculty::whereNull('coordinator_id')->get();
 
@@ -97,7 +136,6 @@ class AdminUserController extends Controller
             ? $request->faculty_id : null;
 
         $userSavedId = $user->id;
-        $userSavedName = $user->username;
 
         $user->save();
 
@@ -116,7 +154,7 @@ class AdminUserController extends Controller
 
                         ActivityLog::create([
                             'id' => Str::uuid(),
-                            'content' => 'Assign ' . $userSavedName .  ' to ' . $facultyAssigned->name . ' successfully!',
+                            'content' => 'Assign ' . $request->username .  ' to ' . $facultyAssigned->name . ' successfully!',
                             'user_id' => Auth::user()->id,
                         ]);
                     }
@@ -127,7 +165,7 @@ class AdminUserController extends Controller
 
         ActivityLog::create([
             'id' => Str::uuid(),
-            'content' => 'User ' . $userSavedName . ' created successfully!',
+            'content' => 'User ' . $request->username . ' created successfully!',
             'user_id' => Auth::user()->id,
         ]);
         toastr()->success('User created successfully!', 'Success', ['timeOut' => 5000]);
@@ -275,12 +313,11 @@ class AdminUserController extends Controller
             return back();
         }
 
-        $deletedUser = $user;
         $user->delete();
 
         ActivityLog::create([
             'id' => Str::uuid(),
-            'content' => 'User ' .  $deletedUser->username  . ' deleted successfully!',
+            'content' => 'User ' .  $request->fullNameDelete  . ' deleted successfully!',
             'user_id' => Auth::user()->id,
         ]);
 

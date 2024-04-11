@@ -1,6 +1,6 @@
 <div class="p-2">
     <div class="menu my-5">
-        <div class="{{ request()->routeIs('home.main-page') ? 'active' : '' }} item">
+        <div class="{{ request()->routeIs('home.main-page', 'home.detail') ? 'active' : '' }} item">
             <a href="{{ route('home.main-page') }}">
                 <div class="icon">
                     <i class="fa-solid fa-home fa-xl"></i>
@@ -8,14 +8,17 @@
                 Home
             </a>
         </div>
-        <div class="{{ request()->routeIs('home.contributions.index') ? 'active' : '' }} item">
-            <a href="{{ route('home.contributions.index', 1) }}">
-                <div class="icon">
-                    <i class="fa-solid fa-folder-open fa-xl"></i>
-                </div>
-                My Contributions
-            </a>
-        </div>
+        @if (Auth::check() && Auth::user()->role->name == 'Student')
+            <div
+                class="{{ request()->routeIs('home.contributions.index', 'home.contributions.create', 'home.contributions.detail') ? 'active' : '' }} item">
+                <a href="{{ route('home.contributions.index') }}">
+                    <div class="icon">
+                        <i class="fa-solid fa-folder-open fa-xl"></i>
+                    </div>
+                    My Contributions
+                </a>
+            </div>
+        @endif
         <div class="{{ request()->routeIs('home.content-policy') ? 'active' : '' }} item">
             <a href="{{ route('home.content-policy') }}">
                 <div class="icon">

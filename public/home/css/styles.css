@@ -13636,3 +13636,8 @@ html[data-bs-theme=dark] .comment-submit {
 .card-user-profile {
   border: none;
 }
+
+.preview-contribution p img {
+  width: 100%!important;
+  object-fit: cover;
+}

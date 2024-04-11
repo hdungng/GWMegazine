@@ -19453,3 +19453,8 @@ div.dt-container .dt-search input:focus {
         text-align: right!important;
     }
 }
+
+.preview-contribution p img {
+    width: 100%!important;
+    object-fit: cover;
+}

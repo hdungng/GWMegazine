@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AdminProfileController extends Controller
 {
@@ -12,12 +17,11 @@ class AdminProfileController extends Controller
         return view("admin.user-profile");
     }
 
-    public function update_info(Request $request, $id) {
-        // Khai implementation
+    public function update_info(Request $request, $id)
+    {
         $request->validate([
             'username' => 'required|string|max:255|min:3',
             'fullname' => 'required|string|max:255|min:3',
-            'password' => 'min:8|required_with:password_confirmation|same:password_confirmation','password_confirmation' => 'min:8',
             'avatar' => 'image|mimes:png,jpg,jpeg|square',
         ], [
             'required' => ":attribute is required",
@@ -29,16 +33,56 @@ class AdminProfileController extends Controller
         ], [
             'username' => "Username",
             'fullname' => "Fullname",
-            'password' => "Password",
             'avatar' => 'Avatar',
-            'faculty_id' => 'Faculty'
         ]);
 
         $user = User::find($id);
 
-        $user->username = $request->username;
-        $user->fullname = $request->fullname;
-        $user->email = $request->email;
+        if ($user) {
+            $user->username = $request->username;
+            $user->fullname = $request->fullname;
+
+            if ($request->hasFile('avatar')) {
+                $avatar_file = $request->file('avatar');
+
+                // GET FILE NAME
+                $avatar_file_name = $avatar_file->getClientOriginalName();
+
+                // UPLOAD FILE NAME
+                $avatar_file->move('public/uploads/images/users', $avatar_file_name);
+                $avatar = "public/uploads/images/users/" . $avatar_file_name;
+                $user->avatar = $avatar;
+            }
+        } else {
+            // User not found, handle the case accordingly
+            toastr()->error('User is not found!', 'Error', ['timeOut' => 5000]);
+            return back();
+        }
+
+        ActivityLog::create([
+            'id' => Str::uuid(),
+            'content' => 'User ' . $request->username . ' update profile successfully!',
+            'user_id' => Auth::user()->id,
+        ]);
+
+        toastr()->success('Update your profile successfully!', 'Success', ['timeOut' => 5000]);
+        $user->save();
+        return redirect()->route('admin.user-profile', Auth::user()->id);
+    }
+
+    public function update_password(Request $request, $id)
+    {
+        $this->validate($request, [
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'required' => ":attribute is required",
+            'min' => ":attribute must be at least :min characters long",
+            'confirmed' => "The passwords you entered do not match",
+        ], [
+            'password' => "Password",
+        ]);
+
+        $user = User::find($id);
 
         if (!$user) {
             // User not found, handle the case accordingly
@@ -46,29 +90,16 @@ class AdminProfileController extends Controller
             return back();
         }
 
-        if ($request->hasFile('avatar')) {
-            $avatar_file = $request->file('avatar');
-
-            // GET FILE NAME
-            $avatar_file_name = $avatar_file->getClientOriginalName();
-
-            // UPLOAD FILE NAME
-            $avatar_file->move('public/uploads/images/users', $avatar_file_name);
-            $avatar = "public/uploads/images/users/" . $avatar_file_name;
-
-            $user->avatar =  $avatar;
-        }
-
-        if ($request->has("password")) {
-            $user->password = Hash::make($request->password);
-        }
-
-        $updatedUser = $user;
+        $user->password = Hash::make($request->password);
         $user->save();
-    }
 
-    public function update_password(Request $request, $id) {
-        // Khai implementation
+        ActivityLog::create([
+            'id' => Str::uuid(),
+            'content' => 'User ' . $request->username . ' update password successfully!',
+            'user_id' => Auth::user()->id,
+        ]);
 
+        toastr()->success('Update your password successfully!', 'Success', ['timeOut' => 5000]);
+        return redirect()->route('admin.user-profile', Auth::user()->id);
     }
 }

@@ -1,9 +1,7 @@
 @extends('layouts.admin')
 
 @section('head.css')
-    <!-- Datatables css -->
-    <link href="vendor/datatables.net-bs5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
-    <link href="vendor/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css" />
 @endsection
 
 @section('body.content')
@@ -38,219 +36,78 @@
                                 <div class="col-12">
                                     <div
                                         class="d-flex flex-sm-row flex-column justify-content-between align-items-end gap-3">
-                                        <div class="app-search">
-                                            <form class="d-flex align-items-end gap-2">
-                                                <div>
-                                                    <label for="faculty" class="form-label">Faculty</label>
-                                                    <select class="form-select" id="faculty">
-                                                        <option>All</option>
-                                                        <option>Business Administrator</option>
-                                                        <option>Information Technology</option>
-                                                        <option>Graphic Design</option>
-                                                        <option>Marketing</option>
-                                                        <option>Event Management</option>
-                                                    </select>
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Filter</button>
-                                            </form>
-                                        </div>
                                         <div class="app-operation">
                                             <button type="button" class="btn btn-outline-danger"><i
                                                     class="ri-equalizer-line me-1"></i> Download All</button>
                                         </div>
                                     </div>
 
-                                    <div class="mt-3">
-                                        <h5 class="mb-2">Contribution Files</h5>
-
-                                        <div class="row mx-n1 g-0">
-                                            <div class="col-xxl-3 col-lg-6">
-                                                <div class="card m-1 shadow-none border">
-                                                    <div class="p-2">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-auto">
-                                                                <div class="avatar-sm">
-                                                                    <span
-                                                                        class="avatar-title bg-primary-subtle text-primary rounded">
-                                                                        <i class="ri-folder-2-line fw-normal fs-20"></i>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col ps-0">
-                                                                <a href="{{ route('admin.contributions.detail', 1) }}"
-                                                                    class="text-muted fw-bold">admin.zip</a>
-                                                                <p class="mb-0 fs-13">45.1 MB</p>
-                                                            </div>
-                                                        </div> <!-- end row -->
-                                                    </div> <!-- end .p-2-->
-                                                </div> <!-- end col -->
-                                            </div> <!-- end col-->
-
-                                            <div class="col-xxl-3 col-lg-6">
-                                                <div class="card m-1 shadow-none border">
-                                                    <div class="p-2">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-auto">
-                                                                <div class="avatar-sm">
-                                                                    <span
-                                                                        class="avatar-title bg-primary-subtle text-primary rounded">
-                                                                        <i class="ri-folder-2-line fw-normal fs-20"></i>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col ps-0">
-                                                                <a href="{{ route('admin.contributions.detail', 1) }}"
-                                                                    class="text-muted fw-bold">admin.zip</a>
-                                                                <p class="mb-0 fs-13">45.1 MB</p>
-                                                            </div>
-                                                        </div> <!-- end row -->
-                                                    </div> <!-- end .p-2-->
-                                                </div> <!-- end col -->
-                                            </div> <!-- end col-->
-
-
-                                            <div class="col-xxl-3 col-lg-6">
-                                                <div class="card m-1 shadow-none border">
-                                                    <div class="p-2">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-auto">
-                                                                <div class="avatar-sm">
-                                                                    <span
-                                                                        class="avatar-title bg-primary-subtle text-primary rounded">
-                                                                        <i class="ri-folder-2-line fw-normal fs-20"></i>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col ps-0">
-                                                                <a href="{{ route('admin.contributions.detail', 1) }}"
-                                                                    class="text-muted fw-bold">admin.zip</a>
-                                                                <p class="mb-0 fs-13">45.1 MB</p>
-                                                            </div>
-                                                        </div> <!-- end row -->
-                                                    </div> <!-- end .p-2-->
-                                                </div> <!-- end col -->
-                                            </div> <!-- end col-->
-
-
-                                            <div class="col-xxl-3 col-lg-6">
-                                                <div class="card m-1 shadow-none border">
-                                                    <div class="p-2">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-auto">
-                                                                <div class="avatar-sm">
-                                                                    <span
-                                                                        class="avatar-title bg-primary-subtle text-primary rounded">
-                                                                        <i class="ri-folder-2-line fw-normal fs-20"></i>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col ps-0">
-                                                                <a href="{{ route('admin.contributions.detail', 1) }}"
-                                                                    class="text-muted fw-bold">admin.zip</a>
-                                                                <p class="mb-0 fs-13">45.1 MB</p>
-                                                            </div>
-                                                        </div> <!-- end row -->
-                                                    </div> <!-- end .p-2-->
-                                                </div> <!-- end col -->
-                                            </div> <!-- end col-->
-
-
-
-                                            <div class="col-xxl-3 col-lg-6">
-                                                <div class="card m-1 shadow-none border">
-                                                    <div class="p-2">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-auto">
-                                                                <div class="avatar-sm">
-                                                                    <span
-                                                                        class="avatar-title bg-primary-subtle text-primary rounded">
-                                                                        <i class="ri-folder-2-line fw-normal fs-20"></i>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col ps-0">
-                                                                <a href="{{ route('admin.contributions.detail', 1) }}"
-                                                                    class="text-muted fw-bold">admin.zip</a>
-                                                                <p class="mb-0 fs-13">45.1 MB</p>
-                                                            </div>
-                                                        </div> <!-- end row -->
-                                                    </div> <!-- end .p-2-->
-                                                </div> <!-- end col -->
-                                            </div> <!-- end col-->
-
-
-
-                                            <div class="col-xxl-3 col-lg-6">
-                                                <div class="card m-1 shadow-none border">
-                                                    <div class="p-2">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-auto">
-                                                                <div class="avatar-sm">
-                                                                    <span
-                                                                        class="avatar-title bg-primary-subtle text-primary rounded">
-                                                                        <i class="ri-folder-2-line fw-normal fs-20"></i>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col ps-0">
-                                                                <a href="{{ route('admin.contributions.detail', 1) }}"
-                                                                    class="text-muted fw-bold">admin.zip</a>
-                                                                <p class="mb-0 fs-13">45.1 MB</p>
-                                                            </div>
-                                                        </div> <!-- end row -->
-                                                    </div> <!-- end .p-2-->
-                                                </div> <!-- end col -->
-                                            </div> <!-- end col-->
-
-
-
-                                            <div class="col-xxl-3 col-lg-6">
-                                                <div class="card m-1 shadow-none border">
-                                                    <div class="p-2">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-auto">
-                                                                <div class="avatar-sm">
-                                                                    <span
-                                                                        class="avatar-title bg-primary-subtle text-primary rounded">
-                                                                        <i class="ri-folder-2-line fw-normal fs-20"></i>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col ps-0">
-                                                                <a href="{{ route('admin.contributions.detail', 1) }}"
-                                                                    class="text-muted fw-bold">admin.zip</a>
-                                                                <p class="mb-0 fs-13">45.1 MB</p>
-                                                            </div>
-                                                        </div> <!-- end row -->
-                                                    </div> <!-- end .p-2-->
-                                                </div> <!-- end col -->
-                                            </div> <!-- end col-->
-
-
-
-                                            <div class="col-xxl-3 col-lg-6">
-                                                <div class="card m-1 shadow-none border">
-                                                    <div class="p-2">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-auto">
-                                                                <div class="avatar-sm">
-                                                                    <span
-                                                                        class="avatar-title bg-primary-subtle text-primary rounded">
-                                                                        <i class="ri-folder-2-line fw-normal fs-20"></i>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col ps-0">
-                                                                <a href="{{ route('admin.contributions.detail', 1) }}"
-                                                                    class="text-muted fw-bold">admin.zip</a>
-                                                                <p class="mb-0 fs-13">45.1 MB</p>
-                                                            </div>
-                                                        </div> <!-- end row -->
-                                                    </div> <!-- end .p-2-->
-                                                </div> <!-- end col -->
-                                            </div> <!-- end col-->
-                                        </div> <!-- end row-->
-                                    </div> <!-- end .mt-3-->
+                                    @if ($contributions->count() > 0)
+                                        <table id="dataTable" class="table w-100 nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Image</th>
+                                                    <th>Title</th>
+                                                    <th>By Student</th>
+                                                    <th>Faculty</th>
+                                                    <th>Status</th>
+                                                    <th>Academic Year</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($contributions as $contribution)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>
+                                                            <img src="{{ url($contribution->image_url) }}" alt=""
+                                                                width="74">
+                                                        </td>
+                                                        <td>
+                                                            <a
+                                                                href="{{ route('admin.contributions.detail', $contribution->id) }}">{{ $contribution->title }}</a>
+                                                        </td>
+                                                        <td>{{ $contribution->student_name }}</td>
+                                                        <td>{{ $contribution->faculty_name }}</td>
+                                                        <td>
+                                                            @switch($contribution->status)
+                                                                @case(0)
+                                                                    <span class="badge text-bg-warning">Pending</span>
+                                                                @break
+                                                                @case(1)
+                                                                    <span class="badge text-bg-success">Published</span>
+                                                                @break
+                                                                @default
+                                                                    <span class="badge text-bg-warning">Pending</span>
+                                                            @endswitch
+                                                        </td>
+                                                        <td>{{ $contribution->academic_year_name }}</td>
+                                                        <td>
+                                                            <i class="ri-more-2-fill px-3" data-bs-toggle="dropdown"
+                                                                aria-expanded="false">
+                                                            </i>
+                                                            <ul class="dropdown-menu">
+                                                                <li><a class="dropdown-item"
+                                                                        href="{{ route('admin.contributions.preview', $contribution->id) }}">Preview</a>
+                                                                </li>
+                                                                @if ($contribution->status == 0 || $contribution->status == 1)
+                                                                    <li><a class="dropdown-item" data-bs-toggle="modal"
+                                                                            data-bs-target="#contributionPublishModal"
+                                                                            data-contributionId="{{ $contribution->id }}"
+                                                                            data-contributionName="{{ $contribution->title }}">Publish</a>
+                                                                    </li>
+                                                                @endif
+                                                            </ul>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    @else
+                                        <p class="text-center">No data currently available.</p>
+                                    @endif
+                                    @include('admin.contributions.publish-modal')
                                 </div>
                             </div>
                             <!-- end inbox-rightbar-->
@@ -267,12 +124,31 @@
 
 
 @section('body.javascript')
-    <!-- Datatables js -->
-    <script src="vendor/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
-    <script src="vendor/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
-    <script src="vendor/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                lengthChange: false,
+                scrollX: true,
+            });
+        });
+    </script>
 
-    <!-- Datatable Demo App js -->
-    <script src="js/pages/demo.datatable-init.js"></script>
+    <script>
+        var contributionPublishModal = document.getElementById('contributionPublishModal');
+
+        contributionPublishModal.addEventListener('show.bs.modal', function(event) {
+            var updateLinkElement = event.relatedTarget; // updateLinkElement that triggered the modal
+
+            var contributionIdData = updateLinkElement.getAttribute('data-contributionId');
+            var contributionNameData = updateLinkElement.getAttribute('data-contributionName');
+
+
+            var contributionIdControl = document.getElementById('contributionIdPublish');
+            var contributionNameText = document.getElementById('contributionNamePublish');
+
+            contributionIdControl.value = contributionIdData;
+            contributionNameText.innerHTML = contributionNameData;
+        })
+    </script>
 @endsection

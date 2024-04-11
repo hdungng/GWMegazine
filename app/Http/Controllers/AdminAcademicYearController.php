@@ -53,13 +53,12 @@ class AdminAcademicYearController extends Controller
         $academicYearModel->final_closure_date = $final_closure_date;
         $academicYearModel->status = AcademicYearStatusEnum::NOT_SELECTED;
 
-        $academicYearSavedName = $academicYearModel->name;
         // Save the AcademicYear instance to the database
         $academicYearModel->save();
 
         ActivityLog::create([
             'id' => Str::uuid(),
-            'content' => 'Academic Year '  . $academicYearSavedName  . ' created successfully!',
+            'content' => 'Academic Year '  . $request->name  . ' created successfully!',
             'user_id' => Auth::user()->id,
         ]);
         toastr()->success('Academic Year created successfully!', 'Success', ['timeOut' => 5000]);
@@ -131,12 +130,11 @@ class AdminAcademicYearController extends Controller
             return back();
         }
 
-        $deletedAcademicYear = $academicYearModel;
         $academicYearModel->delete();
 
         ActivityLog::create([
             'id' => Str::uuid(),
-            'content' => 'Academic Year ' .  $deletedAcademicYear->name  . ' deleted successfully!',
+            'content' => 'Academic Year ' .  $request->academicYearNameDelete  . ' deleted successfully!',
             'user_id' => Auth::user()->id,
         ]);
 
