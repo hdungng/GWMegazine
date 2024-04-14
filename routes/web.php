@@ -17,10 +17,15 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home.main-page');
 Route::get('/home-contribution/{id}', [App\Http\Controllers\HomeController::class, 'detail'])->name('home.detail');
-Route::get('/home-contribution/faculty/{id}', [App\Http\Controllers\HomeController::class, 'filterByFaculty'])->name('home.filterByFaculty');
+Route::post('/home-contribution/search', [App\Http\Controllers\HomeController::class, 'search'])->name('home.search');
+Route::get('/home-contribution/filter/{id}', [App\Http\Controllers\HomeController::class, 'filter'])->name('home.filter');
+Route::get('/get-total-like/{id}', [App\Http\Controllers\LikeController::class, 'getTotalLike'])->name('home.getTotalLike');
 
 
 Route::prefix('contributions')->middleware('role.auth:Student')->group(function () {
+    Route::post('/like', [App\Http\Controllers\LikeController::class, 'like'])->name('home.like');
+
+
     Route::get('', [App\Http\Controllers\HomeContributionController::class, 'index'])->name('home.contributions.index');
     Route::get('/create', [App\Http\Controllers\HomeContributionController::class, 'create'])->name('home.contributions.create');
     Route::get('/detail/{id}', [App\Http\Controllers\HomeContributionController::class, 'detail'])->name('home.contributions.detail');
