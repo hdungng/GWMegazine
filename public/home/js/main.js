@@ -45,7 +45,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-darkModeSwitch.addEventListener('click', function () {
+
+
+darkModeSwitch.addEventListener('click', function (e) {
+	e.preventDefault();
+	
 	let theme = localStorage.getItem('theme');
 
 	if (theme === 'light') {

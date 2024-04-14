@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Enums\AcademicYearStatusEnum;
 use App\Models\AcademicYear;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 
@@ -27,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Paginator::useBootstrap();
+
         // Validator Square Check
         Validator::extend('square', function ($attribute, $value, $parameters, $validator) {
             $imageSize = getimagesize($value->getPathname());

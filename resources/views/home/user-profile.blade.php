@@ -5,7 +5,6 @@
     <!-- Filebond -->
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
     <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
-    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
 @endsection
 
 @section('body.content')
@@ -50,22 +49,33 @@
                                 <div class="tab-pane show active" id="updateInfo">
                                     <form class="mb-3" method="POST" enctype="multipart/form-data"
                                         action="{{ route('home.profile.update-info', Auth::user()->id) }}">
+                                        @csrf
                                         <h4 class="mb-5 text-uppercase fw-semibold">Personal Info</h4>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label for="username" class="form-label">Username</label>
-                                                    <input type="text" class="form-control" id="username"
-                                                        placeholder="Enter username..."
+                                                    <label for="username" class="form-label">Username
+                                                        <span class="text-danger">*</span></label>
+                                                    <input type="text"
+                                                        class="form-control @error('username') is-invalid @enderror"
+                                                        id="username" placeholder="Enter username..." name="username"
                                                         value="{{ Auth::user()->username }}">
+                                                    @error('username')
+                                                        <small class="form-text text-danger">{{ $message }}</small>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label for="fullname" class="form-label">Full Name</label>
-                                                    <input type="text" class="form-control" id="fullname"
-                                                        placeholder="Enter full name..."
+                                                    <label for="fullname" class="form-label">Full Name
+                                                        <span class="text-danger">*</span></label>
+                                                    <input type="text"
+                                                        class="form-control @error('fullname') is-invalid @enderror"
+                                                        id="fullname" placeholder="Enter full name..." name="fullname"
                                                         value="{{ Auth::user()->fullname }}">
+                                                    @error('fullname')
+                                                        <small class="form-text text-danger">{{ $message }}</small>
+                                                    @enderror
                                                 </div>
                                             </div> <!-- end col -->
                                         </div> <!-- end row -->
@@ -73,46 +83,65 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label for="useremail" class="form-label">Email
-                                                        Address</label>
-                                                    <input type="email" class="form-control" id="useremail"
-                                                        placeholder="Enter email address..."
-                                                        value="{{ Auth::user()->email }}">
+                                                    <label for="useremail" class="form-label">Email Address
+                                                        <span class="text-danger">*</span></label>
+                                                    <input type="email"
+                                                        class="form-control @error('email') is-invalid @enderror"
+                                                        id="useremail" placeholder="Enter email address..." name="email"
+                                                        disabled value="{{ Auth::user()->email }}">
+                                                    @error('email')
+                                                        <small class="form-text text-danger">{{ $message }}</small>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label for="avatar" class="form-label">Avatar
-                                                        <span class="text-danger">*</span></label>
-                                                    <input class="filepond" type="file" id="avatar"
-                                                        value="{{ url(Auth::user()->avatar) }}">
+                                                    <div class="mb-3">
+                                                        <label for="avatar" class="form-label">Avatar</label>
+                                                        <input class="@error('avatar') is-invalid @enderror" type="file"
+                                                            id="avatar" name="avatar">
+                                                        @error('avatar')
+                                                            <small class="form-text text-danger">{{ $message }}</small>
+                                                        @enderror
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div> <!-- end row -->
                                         <div class="text-end">
-                                            <button type="submit" class="btn btn-outline-primary square-btn mt-3"></i>
+                                            <button type="submit" class="btn btn-outline-primary square-btn mt-5"></i>
                                                 Save</button>
                                         </div>
                                     </form>
                                     <hr class="my-5">
-                                    <form class="mb-3">
+                                    <form class="mb-3"
+                                        action="{{ route('home.profile.update-password', Auth::user()->id) }}"
+                                        method="POST">
+                                        @csrf
                                         <h4 class="mb-5 text-uppercase fw-semibold">Reset
                                             Password</h4>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label for="password" class="form-label">New
-                                                        Password</label>
-                                                    <input type="text" class="form-control" id="password"
-                                                        placeholder="Enter new password...">
+                                                    <label for="password" class="form-label">Password</label>
+                                                    <input type="password"
+                                                        class="form-control @error('password') is-invalid @enderror"
+                                                        id="password" placeholder="Enter password..." name="password">
+                                                    @error('password')
+                                                        <small class="form-text text-danger">{{ $message }}</small>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="mb-5">
                                                     <label for="cwebsite" class="form-label">Confirm
                                                         Password</label>
-                                                    <input type="text" class="form-control" id="cwebsite"
-                                                        placeholder="Confirm your new password...">
+                                                    <input type="password"
+                                                        class="form-control @error('password_confirmation') is-invalid @enderror"
+                                                        id="password_confirmation" placeholder="Enter confirm password..."
+                                                        name="password_confirmation">
+                                                    @error('password_confirmation')
+                                                        <small class="form-text text-danger">{{ $message }}</small>
+                                                    @enderror
                                                 </div>
                                             </div> <!-- end col -->
                                         </div> <!-- end row -->

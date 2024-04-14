@@ -22,4 +22,9 @@ class Contribution extends Model
         'word_url',
         'academic_year_id'
     ];
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
 }
