@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ContributionMail extends Mailable
+class UserPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,9 +31,9 @@ class ContributionMail extends Mailable
      */
     public function build()
     {
-        return $this->view('submit-contribution-mail')
-        ->from('gwmegazine.workplace@gmail.com')
-        ->subject('[GWMegazine] New Contribution Submission Notification')
-        ->with($this->data);
+        return $this->view('reset-password-mail')
+            ->from('gwmegazine.workplace@gmail.com')
+            ->subject('[GWMegazine] Reset Password Notification')
+            ->with($this->data);
     }
 }

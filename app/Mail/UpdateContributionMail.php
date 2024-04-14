@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ContributionMail extends Mailable
+class UpdateContributionMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,9 +31,9 @@ class ContributionMail extends Mailable
      */
     public function build()
     {
-        return $this->view('submit-contribution-mail')
-        ->from('gwmegazine.workplace@gmail.com')
-        ->subject('[GWMegazine] New Contribution Submission Notification')
-        ->with($this->data);
+        return $this->view('update-contribution-mail')
+            ->from('gwmegazine.workplace@gmail.com')
+            ->subject('[GWMegazine] Update Contribution Submission Notification')
+            ->with($this->data);
     }
 }
