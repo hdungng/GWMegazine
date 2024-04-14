@@ -72,20 +72,6 @@
                                             @enderror
                                         </div>
                                         <div class="col-sm-6 mb-3">
-                                            <label for="password" class="form-label">Password
-                                                <span class="text-danger">*</span></label>
-                                            <input class="form-control @error('password') is-invalid @enderror"
-                                                id="password" name="password" type="password"
-                                                placeholder="Enter password..." value="{{ old('password') }}">
-                                            @error('password')
-                                                <small class="form-text text-danger">{{ $message }}</small>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row">
-                                        <div class="col-sm-6 mb-3">
                                             <label for="avatar" class="form-label">Avatar</label>
                                             <input class="@error('avatar') is-invalid @enderror" type="file"
                                                 id="avatar" name="avatar">
@@ -93,6 +79,10 @@
                                                 <small class="form-text text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
+                                    </div>
+
+
+                                    <div class="row">
                                         <div class="col-sm-6 mb-3">
                                             <label for="role" class="form-label">Role <span
                                                     class="text-danger">*</span></label>
@@ -107,9 +97,6 @@
                                                 <small class="form-text text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
-                                    </div>
-
-                                    <div class="row">
                                         <div class="col-md-6 mb-3" id="dynamicSelectRow">
                                             @error('faculty_id')
                                                 <small class="form-text text-danger">{{ $message }}</small>

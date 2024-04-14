@@ -72,11 +72,10 @@
                                             @enderror
                                         </div>
                                         <div class="col-sm-6 mb-3">
-                                            <label for="password" class="form-label">Password</label>
-                                            <input class="form-control @error('password') is-invalid @enderror"
-                                                id="password" name="password" type="password"
-                                                placeholder="Enter password...">
-                                            @error('password')
+                                            <label for="avatar" class="form-label">Avatar</label>
+                                            <input class="@error('avatar') is-invalid @enderror" type="file"
+                                                id="avatar" name="avatar">
+                                            @error('avatar')
                                                 <small class="form-text text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
@@ -85,18 +84,10 @@
 
                                     <div class="row">
                                         <div class="col-sm-6 mb-3">
-                                            <label for="avatar" class="form-label">Avatar</label>
-                                            <input class="@error('avatar') is-invalid @enderror" type="file"
-                                                id="avatar" name="avatar">
-                                            @error('avatar')
-                                                <small class="form-text text-danger">{{ $message }}</small>
-                                            @enderror
-                                        </div>
-                                        <div class="col-sm-6 mb-3">
                                             <label for="role" class="form-label">Role <span
                                                     class="text-danger">*</span></label>
                                             <select class="form-select @error('role_id') is-invalid @enderror"
-                                                aria-label="role" name="role_id" id="roleSelect" readonly="true"  disabled>
+                                                aria-label="role" name="role_id" id="roleSelect" readonly="true" disabled>
                                                 <option selected value="">Please choose a specific role...</option>
                                                 @foreach ($roles as $role)
                                                     <option
@@ -108,9 +99,7 @@
                                                 <small class="form-text text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
-                                    </div>
 
-                                    <div class="row">
                                         <div class="col-md-6 mb-3" id="dynamicSelectRow">
                                             @if ($user->role_id == $roles[1]->id)
                                                 <!-- Form control for Coordinator -->
@@ -131,8 +120,7 @@
                                                     <label for="faculty" class="form-label">Faculty
                                                         <span class="text-danger">*</span></label>
                                                     <!-- Your form control for Coordinator -->
-                                                    <select class="form-select" aria-label="faculty_id"
-                                                        name="faculty_id">
+                                                    <select class="form-select" aria-label="faculty_id" name="faculty_id">
                                                         @foreach ($faculties as $faculty)
                                                             <option value="{{ $faculty->id }}"
                                                                 {{ $user->faculty_id == $faculty->id ? 'selected' : '' }}>

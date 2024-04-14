@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Enums\UserRoleEnum;
 use App\Models\ActivityLog;
+use App\Mail\UserPasswordMail;
 use App\Models\Faculty;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 
@@ -58,12 +60,11 @@ class AdminUserController extends Controller
                     ->join('roles', 'users.role_id', '=', 'roles.id')
                     ->leftJoin('faculties', 'users.faculty_id', '=', 'faculties.id')
                     ->leftJoin('faculties as coordinator_faculty', 'users.id', '=', 'coordinator_faculty.coordinator_id')
-                    ->whereIn('role_id', [ UserRoleEnum::STUDENT, UserRoleEnum::GUEST ])
+                    ->whereIn('role_id', [UserRoleEnum::STUDENT, UserRoleEnum::GUEST])
                     ->where('faculties.coordinator_id', '=', Auth::user()->id)
                     ->orderBy('role_name', 'asc')
                     ->orderBy('users.created_at', 'desc')
                     ->get();
-
                 break;
             default:
                 break;
@@ -88,7 +89,6 @@ class AdminUserController extends Controller
             'username' => 'required|string|max:255|min:3',
             'fullname' => 'required|string|max:255|min:3',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
             'role_id' => 'required|string|not_in:',
             'avatar' => 'image|mimes:png,jpg,jpeg|square',
             'faculty_id' => [Rule::requiredIf(in_array($request->role_id, [UserRoleEnum::STUDENT, UserRoleEnum::GUEST])),],
@@ -104,7 +104,6 @@ class AdminUserController extends Controller
             'username' => "Username",
             'fullname' => "Fullname",
             'email' => "Email",
-            'password' => "Password",
             'role_id' => 'Role',
             'avatar' => 'Avatar',
             'faculty_id' => 'Faculty'
@@ -123,20 +122,24 @@ class AdminUserController extends Controller
             $avatar = "public/uploads/images/users/default-user.jpg";
         }
 
+        // RANDOM PASSWORD
+        $randomPassword = Str::random(8);
+
+
         $user = new User();
         $user->id = Str::uuid();
         $user->username = $request->username;
         $user->fullname = $request->fullname;
         $user->email = $request->email;
         $user->avatar =  $avatar;
-        $user->password = Hash::make($request->password);
+        $user->password = Hash::make($randomPassword);
         $user->role_id = $request->role_id;
         $user->faculty_id = $request->has('faculty_id') &&
             $request->role_id != UserRoleEnum::COORDINATOR
             ? $request->faculty_id : null;
+        $user->remember_token = Str::random(60);
 
         $userSavedId = $user->id;
-
         $user->save();
 
         if ($request->role_id == UserRoleEnum::COORDINATOR) {
@@ -161,6 +164,14 @@ class AdminUserController extends Controller
                 }
             }
         }
+
+        // SEND EMAIL
+        $mailData = [
+            'email' => $request->email,
+            'defaultPassword' => $randomPassword,
+        ];
+
+        Mail::to($request->email)->send(new UserPasswordMail($mailData));
 
 
         ActivityLog::create([
@@ -196,7 +207,6 @@ class AdminUserController extends Controller
         $request->validate([
             'username' => 'required|string|max:255|min:3',
             'fullname' => 'required|string|max:255|min:3',
-            $request->filled('password') ? 'required|string|min:8' : '',
             'avatar' => 'image|mimes:png,jpg,jpeg|square',
             'faculty_id' => [Rule::requiredIf(in_array($request->role_id, [UserRoleEnum::STUDENT, UserRoleEnum::GUEST])),],
         ], [
@@ -209,7 +219,6 @@ class AdminUserController extends Controller
         ], [
             'username' => "Username",
             'fullname' => "Fullname",
-            'password' => "Password",
             'avatar' => 'Avatar',
             'faculty_id' => 'Faculty'
         ]);
@@ -239,10 +248,6 @@ class AdminUserController extends Controller
             $avatar = "public/uploads/images/users/" . $avatar_file_name;
 
             $user->avatar =  $avatar;
-        }
-
-        if ($request->has("password")) {
-            $user->password = Hash::make($request->password);
         }
 
         $updatedUser = $user;
