@@ -28,9 +28,15 @@
                 <i class="fa-solid fa-bars fa-xl"></i>
             </a>
 
+
+
             <ul class="navbar-nav ms-auto hstack gap-3">
-                <li class="nav-item">
-                    <i class="fa-regular fa-circle-half-stroke fa-xl" id="darkModeSwitch" style="color: #4963C1;"></i>
+
+                <li class="nav-item ms-5">
+                    <a href="#sidenavRight" class="mobile-header" aria-controls="sidenavRight" role="button"
+                        data-bs-toggle="offcanvas">
+                        <i class="fa-solid fa-search fa-xl" style="color: #4963C1;"></i>
+                    </a>
                 </li>
 
                 @if (Auth::check())
@@ -55,26 +61,29 @@
                                     <span>My Account</span>
                                 </a>
                             @endif
+                    <a href="#" class="dropdown-item" id="darkModeSwitch">
+                        <span>Switch Theme</span>
+                    </a>
 
-                            <a href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
+                    <a href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();"
-                                class="dropdown-item">
-                                <i class="ri-logout-box-line fs-18 align-middle me-1"></i>
-                                <span>Logout</span>
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                        </div>
-                    </li>
-                @else
-                    <li class="nav-item">
-                        <a href="{{ route('login') }}"
-                            class="nav-link btn btn-primary text-light px-5 fw-medium py-3 mx-4">Login</a>
-                    </li>
-                @endif
-            </ul>
+                        class="dropdown-item">
+                        <i class="ri-logout-box-line fs-18 align-middle me-1"></i>
+                        <span>Logout</span>
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+        </div>
+        </li>
+    @else
+        <li class="nav-item">
+            <a href="{{ route('login') }}"
+                class="nav-link btn btn-primary text-light px-5 fw-medium py-3 mx-4">Login</a>
+        </li>
+        @endif
+        </ul>
         </div>
     </nav>
 
@@ -102,7 +111,14 @@
         </div>
     </div>
 
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="sidenavRight" aria-labelledby="sidenavRightLabel">
+        <div class="offcanvas-body">
+            <nav id="sidebar-mobile">
+                @include('layouts.home-right-sidebar')
+            </nav>
+        </div>
     </div>
+
 
     <script src="{{ url('public/home/js/jquery.min.js') }}"></script>
     <script src="{{ url('public/home/js/popper.js') }}"></script>
