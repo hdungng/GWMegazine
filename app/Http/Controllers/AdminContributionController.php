@@ -75,8 +75,23 @@ class AdminContributionController extends Controller
         return view('admin.contributions.detail', compact('contribution'));
     }
 
-    public function edit()
+    public function edit($id)
     {
+        $contribution = Contribution::select(
+            'contributions.*',
+            'users.username AS student_name',
+            'users.avatar AS student_avatar',
+            'faculties.name AS faculty_name',
+            'academic_years.name AS academic_year_name',
+            'academic_years.closure_date',
+            'academic_years.final_closure_date',
+        )
+            ->join('users', 'contributions.user_id', '=', 'users.id')
+            ->join('faculties', 'users.faculty_id', '=', 'faculties.id')
+            ->join('academic_years', 'contributions.academic_year_id', '=', 'academic_years.id')
+            ->where('contributions.id', '=', $id)
+            ->first();
+
         return view('admin.contributions.edit');
     }
 
@@ -95,9 +110,12 @@ class AdminContributionController extends Controller
             ->where('contribution_id', $id)
             ->get();
 
+        $disabledComment = now() >= $contribution->created_at->addDays(14);
+
+
         $htmlContent = $this->removeHeadTags(file_get_contents($contribution->html_url));
 
-        return view('admin.contributions.preview', compact('contribution', 'htmlContent', 'comments'));
+        return view('admin.contributions.preview', compact('contribution', 'htmlContent', 'comments', 'disabledComment'));
     }
 
     public function publish(Request $request)

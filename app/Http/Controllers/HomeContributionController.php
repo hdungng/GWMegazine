@@ -10,10 +10,12 @@ use App\Models\AcademicYear;
 use App\Models\ActivityLog;
 use App\Models\Comment;
 use App\Models\Contribution;
+use App\Models\Faculty;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use PhpOffice\PhpWord\IOFactory;
 use Illuminate\Support\Str;
@@ -24,6 +26,9 @@ class HomeContributionController extends Controller
     public $dayLeft;
     public $hoursLeft;
 
+    public $faculties;
+
+
     public $closedContribution;
 
     public $closedContributionAdd;
@@ -31,6 +36,9 @@ class HomeContributionController extends Controller
 
     public function __construct()
     {
+        $this->faculties = Faculty::orderBy('created_at', 'desc')->get();
+
+
         $currentAcademicYear = AcademicYear::where("status", '=', AcademicYearStatusEnum::SELECTED)->first();
         $currentDateTime = Carbon::now();
 
@@ -38,18 +46,15 @@ class HomeContributionController extends Controller
         $this->closedContributionAdd = false;
 
         if ($currentDateTime->gt($currentAcademicYear->closure_date)) {
-            // The current time has passed the deadline
             $this->closedContributionAdd = true;
         }
 
         if ($currentDateTime->gt($currentAcademicYear->final_closure_date)) {
-            // The current time has passed the deadline
             $this->closedContribution = true;
         } else {
             // The current time is before the deadline
             $this->closedContribution = false;
 
-            // Calculate the difference between the current time and the deadline
             $this->dayLeft = $currentDateTime->diff($currentAcademicYear->final_closure_date)->days;
             $this->hoursLeft = $currentDateTime->diff($currentAcademicYear->final_closure_date)->h;
         }
@@ -57,8 +62,7 @@ class HomeContributionController extends Controller
 
     public function index()
     {
-        $contributions = Contribution::where("user_id", Auth::user()->id)
-            ->orderBy("created_at", "desc")->get();
+        $contributions = Contribution::where("user_id", Auth::user()->id)->get();
 
         return view(
             "home.contributions.list",
@@ -66,6 +70,7 @@ class HomeContributionController extends Controller
                 'dayLeft' => $this->dayLeft,
                 'hoursLeft' => $this->hoursLeft,
                 'closedContributionAdd' => $this->closedContributionAdd,
+                'faculties' => $this->faculties,
                 'contributions' => $contributions
             ]
         );
@@ -90,17 +95,20 @@ class HomeContributionController extends Controller
 
 
         $comments = Comment::select('comments.*', 'users.fullname AS username', 'users.avatar AS avatar')
-        ->join('users','comments.user_id','=','users.id')
-        ->where('contribution_id', $id)
-        ->get();
-        
+            ->join('users', 'comments.user_id', '=', 'users.id')
+            ->where('contribution_id', $id)
+            ->get();
+
+        $disabledComment = now() >= $contribution->created_at->addDays(14);
 
         return view("home.contributions.detail", [
             'dayLeft' => $this->dayLeft,
             'hoursLeft' => $this->hoursLeft,
             'closedContribution' => $this->closedContribution,
             'contribution' => $contribution,
-            'comments' => $comments
+            'comments' => $comments,
+            'faculties' => $this->faculties,
+            'disabledComment' => $disabledComment
         ]);
     }
 
@@ -115,6 +123,7 @@ class HomeContributionController extends Controller
         return view("home.contributions.create", [
             'dayLeft' => $this->dayLeft,
             'hoursLeft' => $this->hoursLeft,
+            'faculties' => $this->faculties,
             'currentAcademicYear' => $currentAcademicYear->name
         ]);
     }
@@ -226,6 +235,152 @@ class HomeContributionController extends Controller
         return redirect()->route('home.contributions.detail', $contributionSavedId);
     }
 
+    public function edit(Request $request, $id)
+    {
+        $currentAcademicYear = AcademicYear::where("status", '=', AcademicYearStatusEnum::SELECTED)->first();
+
+        $contribution = Contribution::find($id);
+
+        if (!$contribution) {
+            toastr()->error('Contribution is not found!', 'Error', ['timeOut' => 5000]);
+            return back();
+        }
+
+        if ($this->closedContribution) {
+            toastr()->error('Sorry, currently the final closure date is over!', 'Error', ['timeOut' => 5000]);
+            return redirect()->back();
+        }
+
+
+        return view("home.contributions.edit", [
+            'dayLeft' => $this->dayLeft,
+            'hoursLeft' => $this->hoursLeft,
+            'currentAcademicYear' => $currentAcademicYear->name,
+            'faculties' => $this->faculties,
+            'contribution' => $contribution,
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+
+
+        if ($this->closedContribution) {
+            toastr()->error('Sorry, currently the closure date is over!', 'Error', ['timeOut' => 5000]);
+            return redirect()->back();
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:255|min:3',
+            'description' => 'required|string|max:500|min:20',
+            'wordDocument' => 'mimes:doc,docx',
+            'contributionImage' => 'image|mimes:png,jpg,jpeg',
+        ], [
+            'document.mimes:doc,docx' => ':attribute must be a Word file (doc/docx).',
+            'required' => ":attribute is required",
+            'min' => ":attribute must be at least :min characters long",
+            'max' => ":attribute must be at most :max characters long",
+            'image' => ":attribute must be an image file in jpeg, png, bmp, or gif format",
+            'square' => ":attribute must be a square image",
+        ], [
+            'title' => 'Contribution Title',
+            'description' => 'Description',
+            'wordDocument' => 'Word Document',
+            'contributionImage' => 'Contribution Image',
+        ]);
+
+        $contribution = Contribution::find($id);
+
+        if (!$contribution) {
+            // contribution not found, handle the case accordingly
+            toastr()->error('Contribution is not found!', 'Error', ['timeOut' => 5000]);
+            return back();
+        }
+
+        $contribution->title = $request->title;
+        $contribution->description = $request->description;
+
+
+        // GET STUDENT'S COORDINATOR EMAIL
+        $coordinator = User::select('users.*')
+            ->join('faculties', 'users.id', '=', 'faculties.coordinator_id')
+            ->where('users.role_id', '=', UserRoleEnum::COORDINATOR)
+            ->where('faculties.id', '=', Auth::user()->faculty->id)
+            ->first();
+
+        if (!$coordinator) {
+            toastr()->error('Sorry, currently there is no coordinator in your faculty so you cannot submit your contribution!', 'Error', ['timeOut' => 5000]);
+            return back();
+        }
+
+        if ($request->hasFile('contributionImage')) {
+            $contributionImage_file = $request->file('contributionImage');
+            $contributionImage_file_name = $contributionImage_file->getClientOriginalName();
+
+            $contributionImage_file->move('public/uploads/images/contribution-images', $contributionImage_file_name);
+
+            $contributionImage = "public/uploads/images/contribution-images/" . $contributionImage_file_name;
+
+            // DELETE OLD (IMAGE) FILE 
+            if (File::exists($contribution->image_url)) {
+                File::delete($contribution->image_url);
+            }
+
+            $contribution->image_url = $contributionImage;
+        }
+
+        if ($request->hasFile('wordDocument')) {
+            $word_file = $request->file('wordDocument');
+            $word_file_name = $word_file->getClientOriginalName();
+            // GET FILES NAME
+            $word_file_name_no_extension = pathinfo($word_file_name, PATHINFO_FILENAME);
+
+            // =================================================
+            //    UPLOAD WORD -> HTML
+            // =================================================
+            $phpWord = IOFactory::createReader('Word2007')->load($word_file->path());
+            $objWriter = IOFactory::createWriter($phpWord, 'HTML');
+            $html_url = $_SERVER['DOCUMENT_ROOT'] . '/gw-megazine/public/uploads/contribution_html/' .  $word_file_name_no_extension . '.html';
+
+            $html_url_model = 'public/uploads/contribution_html/' . $word_file_name_no_extension . '.html';
+            $objWriter->save($html_url);
+
+            // UPLOAD FILES
+            $word_file->move('public/uploads/words', $word_file_name);
+
+            $contributionWord = "public/uploads/words/" . $word_file_name;
+
+            // DELETE OLD (WORD, HTML) FILE 
+            if (
+                File::exists($contribution->word_url)
+                && File::exists($contribution->html_url)
+            ) {
+                File::delete($contribution->word_url);
+                File::delete($contribution->html_url);
+            }
+
+            $contribution->html_url = $html_url_model;
+            $contribution->word_url = $contributionWord;
+        }
+
+        $contribution->save();
+
+        // SEND EMAIL FOR COORDINATOR
+
+        $mailData = [
+            'contributionTitle' => $request->title,
+        ];
+        Mail::to($coordinator->email)->send(new ContributionMail($mailData));
+
+        ActivityLog::create([
+            'id' => Str::uuid(),
+            'content' => 'Student ' . Auth::user()->username . ' ('  .  Auth::user()->faculty->name  . ' )' .  ' has updated a new contribution successfully!',
+            'user_id' => Auth::user()->id,
+        ]);
+
+        toastr()->success('Contribution updated successfully!', 'Success', ['timeOut' => 5000]);
+        return redirect()->route('home.contributions.detail', $contribution->id);
+    }
 
     public function comment(Request $request, $id)
     {

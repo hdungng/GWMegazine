@@ -37,8 +37,8 @@
                                     <div
                                         class="d-flex flex-sm-row flex-column justify-content-between align-items-end gap-3">
                                         <div class="app-operation">
-                                            <button type="button" class="btn btn-outline-danger"><i
-                                                    class="ri-equalizer-line me-1"></i> Download All</button>
+                                            <button type="button" class="btn btn-outline-danger">Download All <i
+                                                    class="ri-download-2-fill ms-1"></i> </button>
                                         </div>
                                     </div>
 
@@ -53,6 +53,7 @@
                                                     <th>Faculty</th>
                                                     <th>Status</th>
                                                     <th>Academic Year</th>
+                                                    <th>Submited Date</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -75,14 +76,18 @@
                                                                 @case(0)
                                                                     <span class="badge text-bg-warning">Pending</span>
                                                                 @break
+
                                                                 @case(1)
                                                                     <span class="badge text-bg-success">Published</span>
                                                                 @break
+
                                                                 @default
                                                                     <span class="badge text-bg-warning">Pending</span>
                                                             @endswitch
                                                         </td>
                                                         <td>{{ $contribution->academic_year_name }}</td>
+                                                        <td>{{ (new DateTime($contribution->created_at))->format('F d, Y H:i:s') }}
+                                                        </td>
                                                         <td>
                                                             <i class="ri-more-2-fill px-3" data-bs-toggle="dropdown"
                                                                 aria-expanded="false">
@@ -91,7 +96,7 @@
                                                                 <li><a class="dropdown-item"
                                                                         href="{{ route('admin.contributions.preview', $contribution->id) }}">Preview</a>
                                                                 </li>
-                                                                @if ($contribution->status == 0 || $contribution->status == 1)
+                                                                @if ($contribution->status == 0)
                                                                     <li><a class="dropdown-item" data-bs-toggle="modal"
                                                                             data-bs-target="#contributionPublishModal"
                                                                             data-contributionId="{{ $contribution->id }}"

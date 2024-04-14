@@ -74,21 +74,25 @@
                             @endif
 
 
-                            <div class="border rounded mt-4">
-                                <form action="{{ route('admin.contributions.comment', $contribution->id) }}" method="POST"
-                                    class="comment-area-box">
-                                    @csrf
-                                    <textarea rows="3" class="form-control @error('content') is-invalid @enderror border-0 resize-none" placeholder="Your comment..." name="content"></textarea>
-                                    @error('content')
-                                        <small class="form-text text-danger">{{ $message }}</small>
-                                    @enderror
+                            @if (!$disabledComment)
+                                <div class="border rounded mt-4">
+                                    <form action="{{ route('admin.contributions.comment', $contribution->id) }}"
+                                        method="POST" class="comment-area-box">
+                                        @csrf
+                                        <textarea rows="3" class="form-control @error('content') is-invalid @enderror border-0 resize-none"
+                                            placeholder="Your comment..." name="content"></textarea>
+                                        @error('content')
+                                            <small class="form-text text-danger">{{ $message }}</small>
+                                        @enderror
 
-                                    <div class="p-2 bg-light d-flex justify-content-between align-items-center">
-                                        <button type="submit" class="btn btn-sm btn-success"><i
-                                                class="ri-send-plane-2 me-1"></i>Submit</button>
-                                    </div>
-                                </form>
-                            </div>
+                                        <div class="p-2 bg-light d-flex justify-content-between align-items-center">
+                                            <button type="submit" class="btn btn-sm btn-success"><i
+                                                    class="ri-send-plane-2 me-1"></i>Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            @endif
+
                             <!-- end .border-->
                         </div>
                         <!-- end card-body-->

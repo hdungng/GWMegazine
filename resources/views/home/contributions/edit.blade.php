@@ -26,58 +26,74 @@
                             <label for="studentName" class="form-label">Student Name <span
                                     class="text-danger">*</span></label>
                             <input class="form-control" id="studentName" name="studentName" type="text"
-                                placeholder="John Doe" disabled>
+                                placeholder="{{ Auth::user()->fullname }}" disabled>
                         </div>
                         <div class="col-sm-6 mb-5">
                             <label for="academicYear" class="form-label">Academic Year <span
                                     class="text-danger">*</span></label>
                             <input class="form-control" id="academicYear" name="academicYear" type="text"
-                                placeholder="Summer 2024" disabled>
+                                placeholder="{{ $currentAcademicYear }}" disabled>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6 mb-5">
                             <label for="studentEmail" class="form-label">Email <span class="text-danger">*</span></label>
                             <input class="form-control" id="studentEmail" name="studentEmail" type="email"
-                                placeholder="johndoe@gmail.com" disabled>
+                                placeholder="{{ Auth::user()->email }}" disabled>
                         </div>
                         <div class="col-sm-6 mb-5">
                             <label for="studentFaculty" class="form-label">Faculty <span
                                     class="text-danger">*</span></label>
                             <input class="form-control" id="studentFaculty" name="studentFaculty" type="text"
-                                placeholder="Information Techonology" disabled>
+                                placeholder="{{ Auth::user()->faculty->name }}" disabled>
                         </div>
                     </div>
                 </div>
             </div>
-            <form action="" method="post" class="mt-5" id="add-contribution">
+            <form action="{{ route('home.contributions.update', $contribution->id) }}" method="POST" class="mt-5" id="add-contribution"
+                enctype="multipart/form-data">
+                @csrf
                 <div class="row">
                     <div class="col-sm-6 mb-5">
-                        <label for="contributionName" class="form-label">Contribution Name <span
-                                class="text-danger">*</span></label>
-                        <input class="form-control" id="contributionName" name="contributionName" type="text"
-                            placeholder="Enter contribution name...">
+                        <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+                        <input class="form-control @error('title') is-invalid @enderror" id="title" name="title"
+                            type="text" placeholder="Enter contribution title..." value="{{ $contribution->title }}">
+                        @error('title')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
                     <div class="col-sm-6 mb-5">
-                        <label for="wordDocument" class="form-label">Word Document <span
-                                class="text-danger">*</span></label>
-                        <input class="form-control" type="file" id="wordDocument">
+                        <label for="wordDocument" class="form-label">Word Document: <span class="fst-italic text-primary">{{ basename($contribution->word_url)  }}</span></label>
+                        <input class="form-control @error('wordDocument') is-invalid @enderror" type="file"
+                            id="wordDocument" name="wordDocument">
+                        @error('wordDocument')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
 
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-5">
-                        <label for="contributionImage" class="form-label">Contribution Image <span
-                                class="text-danger">*</span></label>
-                        <input class="filepond" type="file" id="contributionImage">
+                        <label for="contributionImage" class="form-label">Contribution Image</label>
+                        <img src="{{ url($contribution->image_url) }}" class="contribution-update-preview" alt="">
+
+                        <input class="filepond @error('contributionImage') is-invalid @enderror" type="file"
+                            id="contributionImage" name="contributionImage">
+                        @error('contributionImage')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
                     <div class="col-md-6 mb-5">
                         <label for="description" class="mb-2">Description <span class="text-danger">*</span></label>
-                        <textarea name="description" class="form-control main_content" rows="5"></textarea>
-                        <div class="hstack mt-5">
-                            <button class="btn btn-outline-primary square-btn ms-auto" type="button" data-bs-toggle="modal"
-                                data-bs-target="#term&condition">Submit</button>
-                        </div>
+                        <textarea name="description" class="form-control  @error('description') is-invalid @enderror main_content"
+                            rows="5">{{ $contribution->description }}</textarea>
+                        @error('description')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                    <div class="hstack mt-5">
+                        <button class="btn btn-outline-primary square-btn ms-auto" type="button" data-bs-toggle="modal"
+                            data-bs-target="#term&condition">Save</button>
                     </div>
                 </div>
                 <!-- Modal -->
@@ -161,7 +177,7 @@
                 FilePond.create(
                     contributionImageField, {
                         storeAsFile: true,
-                    }
+                    },
                 );
             });
         });

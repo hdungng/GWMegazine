@@ -68,13 +68,10 @@
 
                                     <div class="row">
                                         <div class="col-sm-6 mb-3">
-                                            <label for="status" class="form-label">Contribution Status
+                                            <label for="contributionName" class="form-label">Contribution Name
                                                 <span class="text-danger">*</span></label>
-                                            <select class="form-select" name="status">
-                                                <option value="0">Pending</option>
-                                                <option value="1">Fixed</option>
-                                                <option value="2">Done</option>
-                                            </select>
+                                            <input class="form-control" id="contributionName" name="contributionName"
+                                                type="text" placeholder="Enter contribution name...">
                                         </div>
 
                                         <div class="col-sm-6 mb-3">
@@ -86,12 +83,12 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-sm-6 mb-3">
-                                            <label for="contributionName" class="form-label">Contribution Name
-                                                <span class="text-danger">*</span></label>
-                                            <input class="form-control" id="contributionName" name="contributionName"
-                                                type="text" placeholder="Enter contribution name...">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="contributionImages" class="form-label">Contribution
+                                                Images <span class="text-danger">*</span></label>
+                                            <input class="filepond" type="file" id="contributionImages" multiple>
                                         </div>
+
                                         <div class="col-sm-6 mb-3">
                                             <label for="wordDocument" class="form-label">Word Document <span
                                                     class="text-danger">*</span></label>
@@ -101,19 +98,14 @@
 
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label for="contributionImages" class="form-label">Contribution
-                                                Images <span class="text-danger">*</span></label>
-                                            <input class="filepond" type="file" id="contributionImages" multiple>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
                                             <label for="description" class="mb-2">Contribution Description <span
                                                     class="text-danger">*</span></label>
                                             <textarea name="description" class="form-control main_content" rows="5"></textarea>
-                                            <div class="hstack mt-5">
-                                                <button class="btn btn-outline-primary ms-auto"
-                                                    type="submit">Submit</button>
-                                            </div>
                                         </div>
+                                    </div>
+
+                                    <div class="hstack mt-5">
+                                        <button class="btn btn-outline-primary ms-auto" type="submit">Submit</button>
                                     </div>
                                 </form>
                             </div>

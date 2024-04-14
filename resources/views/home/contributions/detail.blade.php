@@ -36,6 +36,7 @@
                                     @case(0)
                                         <span class="badge text-bg-warning">Pending</span>
                                     @break
+
                                     @case(1)
                                         <span class="badge text-bg-success">Published</span>
                                     @break
@@ -50,6 +51,10 @@
                             <td>{{ $contribution->academic_year_name }}</td>
                         </tr>
                         <tr>
+                            <th>Submited Date</th>
+                            <td>{{ (new DateTime($contribution->created_at))->format('F d, Y H:i:s') }}</td>
+                        </tr>
+                        <tr>
                             <th>Closure date</th>
                             <td>{{ (new DateTime($contribution->closure_date))->format('F d, Y H:i:s') }}</td>
                         </tr>
@@ -61,14 +66,16 @@
                             <th>Last modified</th>
                             <td>{{ (new DateTime($contribution->updated_at))->format('F d, Y H:i:s') }}</td>
                         </tr>
-                        <tr>
-                            <th>Edit</th>
-                            <td>
-                                <a href="{{ route('home.contributions.edit', $contribution->id) }}"
-                                    class="btn btn-outline-primary square-btn">Edit
-                                    Contribution</a>
-                            </td>
-                        </tr>
+                        @if (!$closedContribution)
+                            <tr>
+                                <th>Edit</th>
+                                <td>
+                                    <a href="{{ route('home.contributions.edit', $contribution->id) }}"
+                                        class="btn btn-outline-primary square-btn">Edit
+                                        Contribution</a>
+                                </td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -83,7 +90,7 @@
 
                     @if ($comments->count() > 0)
                         @foreach ($comments as $comment)
-                            <div class="d-flex align-items-start mt-3">
+                            <div class="d-flex align-items-start mt-5">
                                 <img class="me-2 rounded-circle" src="{{ url($comment->avatar) }}"
                                     alt="Generic placeholder image" height="32" />
                                 <div class="w-100 ms-3">
@@ -98,22 +105,24 @@
                         <p class="text-center">No comments currently available.</p>
                     @endif
 
-                    <div class="border rounded mt-4">
-                        <form action="{{ route('home.contributions.comment', $contribution->id) }}" method="POST"
-                            class="comment-area-box">
-                            @csrf
-                            <textarea rows="3" class="form-control @error('content') is-invalid @enderror border-0 resize-none"
-                                placeholder="Your comment..." name="content"></textarea>
-                            @error('content')
-                                <small class="form-text text-danger">{{ $message }}</small>
-                            @enderror
+                    @if (!$disabledComment)
+                        <div class="border rounded mt-4">
+                            <form action="{{ route('home.contributions.comment', $contribution->id) }}" method="POST"
+                                class="comment-area-box">
+                                @csrf
+                                <textarea rows="3" class="form-control @error('content') is-invalid @enderror border-0 resize-none"
+                                    placeholder="Your comment..." name="content"></textarea>
+                                @error('content')
+                                    <small class="form-text text-danger">{{ $message }}</small>
+                                @enderror
 
-                            <div class="p-2 d-flex justify-content-between align-items-center">
-                                <button type="submit" class="btn btn-sm btn-success"><i
-                                        class="ri-send-plane-2 me-1"></i>Submit</button>
-                            </div>
-                        </form>
-                    </div>
+                                <div class="p-2 d-flex justify-content-between align-items-center">
+                                    <button type="submit" class="btn btn-sm btn-success"><i
+                                            class="ri-send-plane-2 me-1"></i>Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    @endif
                     <!-- end .border-->
                 </div>
                 <!-- end card-body-->
