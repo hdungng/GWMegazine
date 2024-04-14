@@ -57,16 +57,16 @@
                                         <div class="col-8">
                                             <div class="card-body">
                                                 <h3 class="card-title fw-semibold">{{ $contribution->title }}</h3>
-                                                <p class="card-desc">{{  $contribution->description }}</p>
-                                                <p class="card-author"><span>{{ $contribution->student_name }}</span> - <span>{{ (new DateTime($contribution->created_at))->format('F d, Y') }}</span></p>
+                                                <p class="card-desc">{{ $contribution->description }}</p>
+                                                <p class="card-author"><span>{{ $contribution->student_name }}</span> -
+                                                    <span>{{ (new DateTime($contribution->created_at))->format('F d, Y') }}</span>
+                                                </p>
                                                 <div class="hstack gap-5">
                                                     <div class="like-box hstack gap-3 ms-auto">
                                                         <span><i class="fa-solid fa-heart fa-xl"
                                                                 style="color: #FC6589;"></i></span>
-                                                        <span class="stats-num">50</span>
+                                                        <span class="stats-num">{{ count($contribution->likes) }}</span>
                                                     </div>
-                                                    <span class="share-btn"><i class="fa-solid fa-share-nodes fa-xl"
-                                                            style="color: #95A4DB;"></i></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -82,57 +82,50 @@
                 @endif
             </div>
 
+            <div class="d-flex justify-content-center mt-3">
+                {{ $contributions->links() }}
+            </div>
+
         </div>
     </div>
     <div class="col-lg-3">
         <div class="position-fixed">
             <div class="right-sidebar pe-3">
                 <div class="menu my-5">
-                    <div class="item">
-                        <i class="fa-regular fa-landmark fa-lg"></i>
-                        Contributions of Faculty
-                    </div>
-                    <div id="faculty-collapse">
-                        <ul class="list-group falculty-lists mt-3">
-                            <li class="list-group-item"><a href="search-result.html">
-                                    <div class="icon">
-                                        <i class="fa-solid fa-business-time fa-lg"></i>
-                                    </div>
-                                    Business Management
-                                </a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="search-result.html">
-                                    <div class="icon">
-                                        <i class="fa-solid fa-computer fa-lg"></i>
-                                    </div>
-                                    Information Technology
-                                </a>
-                            </li>
-                            <li class="list-group-item"><a href="search-result.html">
-                                    <div class="icon">
-                                        <i class="fa-solid fa-object-ungroup fa-lg"></i>
-                                    </div>
-                                    Graphic Design
-                                </a></li>
-                            <li class="list-group-item"><a href="search-result.html">
-                                    <div class="icon">
-                                        <i class="fa-solid fa-chart-simple fa-lg"></i>
-                                    </div>
-                                    Marketing
-                                </a>
-                            </li>
-                            <li class="list-group-item"><a href="search-result.html">
-                                    <div class="icon">
-                                        <i class="fa-solid fa-calendar-days fa-lg"></i>
-                                    </div>
-                                    Event Management
-                                </a>
-                            </li>
-                        </ul>
+                    <form action="{{ route('home.search') }}" method="POST">
+                        @csrf
+                        <div id="search-box">
+                            <div>
+                                <h5 class="fw-semibold">What are you looking for? 🧐</h5>
+                                <div class="search-input">
+                                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                                    </svg>
+                                    <input type="text" class="search-field" placeholder="Search..." name="searchQuery">
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="recommended-topics-box mt-5">
+                        <h5 class="fw-semibold">Faculties Available</h5>
+
+                        @if ($faculties->count() > 0)
+                            <div class="topics-container">
+                                @foreach ($faculties as $faculty)
+                                    <a href="{{ route('home.filter', $faculty->id) }}" class="topic-item"
+                                        style="background: {{ $faculty->chart_color }}">{{ $faculty->name }}</a>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="mt-5">No faculties currently available.</p>
+                        @endif
+
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

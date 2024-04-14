@@ -45,7 +45,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $log->content }}</td>
-                                                <td>{{ $log->created_at }}</td>
+                                                <td>{{ (new DateTime($log->created_at))->format('F d, Y H:i:s') }}</td>
                                                 <td>{{ $log->user->fullname }}</td>
                                             </tr>
                                         @endforeach
