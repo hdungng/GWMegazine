@@ -186,7 +186,7 @@ class HomeContributionController extends Controller
         // =================================================
         $phpWord = IOFactory::createReader('Word2007')->load($word_file->path());
         $objWriter = IOFactory::createWriter($phpWord, 'HTML');
-        $html_url = $_SERVER['DOCUMENT_ROOT'] . '/GWMegazine/public/uploads/contribution_html/' .  $word_file_name_no_extension . '.html';
+        $html_url = $_SERVER['DOCUMENT_ROOT'] . '/gw-megazine/public/uploads/contribution_html/' .  $word_file_name_no_extension . '.html';
 
         $html_url_model = 'public/uploads/contribution_html/' . $word_file_name_no_extension . '.html';
         $objWriter->save($html_url);
@@ -263,8 +263,6 @@ class HomeContributionController extends Controller
 
     public function update(Request $request, $id)
     {
-
-
         if ($this->closedContribution) {
             toastr()->error('Sorry, currently the closure date is over!', 'Error', ['timeOut' => 5000]);
             return redirect()->back();

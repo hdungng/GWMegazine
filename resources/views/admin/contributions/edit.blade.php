@@ -36,76 +36,89 @@
                         <div class="card-body">
                             <div id="content" class="p-2">
                                 <!-- Content -->
-                                <form action="" method="post" id="add-contribution">
+                                <form action="{{ route('admin.contributions.update', $contribution->id) }}" method="POST"
+                                    id="add-contribution" enctype="multipart/form-data">
+                                    @csrf
                                     <div class="row">
                                         <div class="col-sm-6 mb-3">
                                             <label for="studentName" class="form-label">Student Name <span
                                                     class="text-danger">*</span></label>
                                             <input class="form-control" id="studentName" name="studentName" type="text"
-                                                placeholder="John Doe" disabled>
+                                                placeholder="{{ $contribution->student_name }}" disabled>
                                         </div>
-                                        <div class="col-sm-6 mb-3">
-                                            <label for="studentID" class="form-label">Student ID <span
-                                                    class="text-danger">*</span></label>
-                                            <input class="form-control" id="studentID" name="studentID" type="text"
-                                                placeholder="GCS2108xx" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-sm-6 mb-3">
                                             <label for="studentEmail" class="form-label">Email <span
                                                     class="text-danger">*</span></label>
                                             <input class="form-control" id="studentEmail" name="studentEmail" type="email"
-                                                placeholder="johndoe@gmail.com" disabled>
+                                                placeholder="{{ $contribution->email }}" disabled>
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-sm-6 mb-3">
                                             <label for="studentFaculty" class="form-label">Faculty <span
                                                     class="text-danger">*</span></label>
                                             <input class="form-control" id="studentFaculty" name="studentFaculty"
-                                                type="text" placeholder="Information Techonology" disabled>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-sm-6 mb-3">
-                                            <label for="contributionName" class="form-label">Contribution Name
-                                                <span class="text-danger">*</span></label>
-                                            <input class="form-control" id="contributionName" name="contributionName"
-                                                type="text" placeholder="Enter contribution name...">
+                                                type="text" placeholder="{{ $contribution->faculty_name }}" disabled>
                                         </div>
 
                                         <div class="col-sm-6 mb-3">
                                             <label for="academicYear" class="form-label">Academic Year <span
                                                     class="text-danger">*</span></label>
                                             <input class="form-control" id="academicYear" name="academicYear" type="text"
-                                                placeholder="Summer" disabled>
+                                                placeholder="{{ $contribution->academic_year_name }}" disabled>
                                         </div>
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="contributionImages" class="form-label">Contribution
-                                                Images <span class="text-danger">*</span></label>
-                                            <input class="filepond" type="file" id="contributionImages" multiple>
+                                        <div class="col-sm-6 mb-3">
+                                            <label for="title" class="form-label">Title <span
+                                                    class="text-danger">*</span></label>
+                                            <input class="form-control @error('title') is-invalid @enderror" id="title"
+                                                name="title" type="text" placeholder="Enter contribution title..."
+                                                value="{{ $contribution->title }}">
+                                            @error('title')
+                                                <small class="form-text text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
 
                                         <div class="col-sm-6 mb-3">
-                                            <label for="wordDocument" class="form-label">Word Document <span
-                                                    class="text-danger">*</span></label>
-                                            <input class="form-control" type="file" id="wordDocument">
+                                            <label for="wordDocument" class="form-label">Word Document: <span
+                                                    class="fst-italic text-primary">{{ basename($contribution->word_url) }}</span></label>
+                                            <input class="form-control @error('wordDocument') is-invalid @enderror"
+                                                type="file" id="wordDocument" name="wordDocument">
+                                            @error('wordDocument')
+                                                <small class="form-text text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
+
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label for="description" class="mb-2">Contribution Description <span
+                                            <label for="contributionImage" class="form-label">Contribution Image</label>
+                                            <img src="{{ url($contribution->image_url) }}"
+                                                class="contribution-update-preview" alt="">
+
+                                            <input class="filepond @error('contributionImage') is-invalid @enderror"
+                                                type="file" id="contributionImage" name="contributionImage">
+                                            @error('contributionImage')
+                                                <small class="form-text text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="description" class="mb-2">Description <span
                                                     class="text-danger">*</span></label>
-                                            <textarea name="description" class="form-control main_content" rows="5"></textarea>
+                                            <textarea name="description" class="form-control  @error('description') is-invalid @enderror main_content"
+                                                rows="5">{{ $contribution->description }}</textarea>
+                                            @error('description')
+                                                <small class="form-text text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                     </div>
 
                                     <div class="hstack mt-5">
-                                        <button class="btn btn-outline-primary ms-auto" type="submit">Submit</button>
+                                        <button class="btn btn-outline-primary ms-auto" type="submit">Save</button>
                                     </div>
                                 </form>
                             </div>
@@ -122,6 +135,7 @@
 
 @section('body.javascript')
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -129,14 +143,15 @@
                 FilePondPluginImagePreview,
             );
 
-            // Select the file input and use create() to turn it into a pond
-            FilePond.create(
-                document.getElementById('contributionImages')
-            );
-
-            // Set up image preview container
-            const imagePreviewContainer = document.getElementById('image-preview-container');
-
+            $(document).ready(function() {
+                var contributionImageField = document.getElementById('contributionImage');
+                // Select the file input and use create() to turn it into a pond
+                FilePond.create(
+                    contributionImageField, {
+                        storeAsFile: true,
+                    },
+                );
+            });
         });
     </script>
 @endsection
