@@ -19438,9 +19438,9 @@ div.dt-container div.dt-layout-cell.dt-end {
     text-align: right !important;
 }
 div.dt-container .dt-search input {
-    border: 1px solid #6F757E!important;
+    border: 1px solid #6f757e !important;
     width: 250px;
-    margin-left: 12px!important;
+    margin-left: 12px !important;
 }
 div.dt-container .dt-search input:focus {
     outline: 2px solid var(--ct-primary);
@@ -19450,11 +19450,30 @@ div.dt-container .dt-search input:focus {
     .dt-container .dt-length,
     .dt-container .dt-search {
         float: none;
-        text-align: right!important;
+        text-align: right !important;
     }
 }
 
+.preview-contribution p,
+.preview-contribution span {
+    font-family: var(--ct-body-font-family) !important;
+    color: var(--ct-body-color) !important;
+}
+
+html[data-bs-theme="dark"] .preview-contribution p,
+html[data-bs-theme="dark"] .preview-contribution span {
+    font-family: var(--ct-body-font-family) !important;
+    color: var(--ct-body-color) !important;
+}
+
+.contribution-update-preview {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    margin-bottom: 24px;
+}
+
 .preview-contribution p img {
-    width: 100%!important;
+    width: 100% !important;
     object-fit: cover;
 }

@@ -13986,3 +13986,17 @@ html[data-bs-theme="dark"] .search-field {
 .highlight {
   background: var(--bs-primary);
 }
+
+.preview-contribution p,
+.preview-contribution span {
+    font-family: "Poppins", Arial, sans-serif !important;
+    color: var(--bs-body-color) !important;
+    font-size: 1.4rem !important;
+}
+
+html[data-bs-theme="dark"] .preview-contribution p,
+html[data-bs-theme="dark"] .preview-contribution span {
+    font-family: "Poppins", Arial, sans-serif !important;
+    color: var(--ct-body-color) !important;
+    font-size: 1.4rem !important;
+}
