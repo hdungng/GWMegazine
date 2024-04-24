@@ -14,7 +14,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box">
-                        <h4 class="page-title">Users</h4>
+                        @if (in_array(Auth::user()->role->name, ['Admin', 'Manager']))
+                            <h4 class="page-title">Users</h4>
+                        @else
+                            <h4 class="page-title">Students</h4>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -23,9 +27,13 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="hstack mb-3">
-                                <a href="{{ route('admin.users.create') }}" class="btn btn-outline-primary ms-auto">Add User</a>
-                            </div>
+                            @if (Auth::user()->role->name == 'Admin')
+                                <div class="hstack mb-3">
+                                    <a href="{{ route('admin.users.create') }}" class="btn btn-outline-primary ms-auto">Add
+                                        User</a>
+                                </div>
+                            @endif
+
                             @if ($users->count() > 0)
                                 <table id="dataTable" class="table w-100 nowrap">
                                     <thead>
@@ -49,7 +57,7 @@
                                                 <td>{{ $user->role_name }}</td>
                                                 <td>{{ $user->faculty_name }}</td>
                                                 <td>
-                                                    @if (Auth::user()->id != $user->id)
+                                                    @if (Auth::user()->id != $user->id && Auth::user()->role->name == 'Admin')
                                                         <i class="ri-more-2-fill px-3" data-bs-toggle="dropdown"
                                                             aria-expanded="false">
                                                         </i>
@@ -74,6 +82,7 @@
                             @else
                                 <p class="text-center">No data currently available.</p>
                             @endif
+
                         </div> <!-- end card body-->
                     </div> <!-- end card -->
                 </div><!-- end col-->

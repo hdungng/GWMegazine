@@ -34,13 +34,16 @@
                             <!-- Left sidebar -->
                             <div class="row">
                                 <div class="col-12">
-                                    <div
-                                        class="d-flex flex-sm-row flex-column justify-content-between align-items-end gap-3">
-                                        <div class="app-operation">
-                                            <button type="button" class="btn btn-outline-danger">Download All <i
-                                                    class="ri-download-2-fill ms-1"></i> </button>
+                                    @if (Auth::user()->role->name == 'Manager')
+                                        <div
+                                            class="d-flex flex-sm-row flex-column justify-content-between align-items-end gap-3">
+                                            <div class="app-operation">
+                                                <a href="{{ route('admin.downloadFiles') }}"
+                                                    class="btn btn-outline-danger">Download All <i
+                                                        class="ri-download-2-fill ms-1"></i> </a>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
 
                                     @if ($contributions->count() > 0)
                                         <table id="dataTable" class="table w-100 nowrap">
@@ -81,6 +84,14 @@
                                                                     <span class="badge text-bg-success">Published</span>
                                                                 @break
 
+                                                                @case(2)
+                                                                    <span class="badge text-bg-danger">Published For Guest</span>
+                                                                @break
+
+                                                                @case(3)
+                                                                    <span class="badge text-bg-primary">Published All</span>
+                                                                @break
+
                                                                 @default
                                                                     <span class="badge text-bg-warning">Pending</span>
                                                             @endswitch
@@ -96,11 +107,33 @@
                                                                 <li><a class="dropdown-item"
                                                                         href="{{ route('admin.contributions.preview', $contribution->id) }}">Preview</a>
                                                                 </li>
-                                                                @if ($contribution->status == 0)
+                                                                @if ($contribution->status != 1 && Auth::user()->role->name == 'Coordinator')
                                                                     <li><a class="dropdown-item" data-bs-toggle="modal"
                                                                             data-bs-target="#contributionPublishModal"
                                                                             data-contributionId="{{ $contribution->id }}"
                                                                             data-contributionName="{{ $contribution->title }}">Publish</a>
+                                                                    </li>
+                                                                @endif
+                                                                @if ($contribution->status != 2 && Auth::user()->role->name == 'Coordinator')
+                                                                    <li><a class="dropdown-item" data-bs-toggle="modal"
+                                                                            data-bs-target="#contributionPublishForGuestModal"
+                                                                            data-contributionId="{{ $contribution->id }}"
+                                                                            data-contributionName="{{ $contribution->title }}">Publish
+                                                                            For Guest</a>
+                                                                    </li>
+                                                                @endif
+                                                                @if ($contribution->status != 3 && Auth::user()->role->name == 'Coordinator')
+                                                                    <li><a class="dropdown-item" data-bs-toggle="modal"
+                                                                            data-bs-target="#contributionPublishAllModal"
+                                                                            data-contributionId="{{ $contribution->id }}"
+                                                                            data-contributionName="{{ $contribution->title }}">Publish
+                                                                            All</a>
+                                                                    </li>
+                                                                @endif
+                                                                @if (Auth::user()->role->name == 'Manager')
+                                                                    <li>
+                                                                        <a class="dropdown-item"
+                                                                            href="{{ route('admin.download-file', $contribution->id) }}">Download</a>
                                                                     </li>
                                                                 @endif
                                                             </ul>
@@ -113,6 +146,8 @@
                                         <p class="text-center">No data currently available.</p>
                                     @endif
                                     @include('admin.contributions.publish-modal')
+                                    @include('admin.contributions.publish-for-guest-modal')
+                                    @include('admin.contributions.publish-all-modal')
                                 </div>
                             </div>
                             <!-- end inbox-rightbar-->
@@ -141,6 +176,10 @@
 
     <script>
         var contributionPublishModal = document.getElementById('contributionPublishModal');
+        var contributionPublishAllModal = document.getElementById('contributionPublishAllModal');
+        var contributionPublishForGuestModal = document.getElementById('contributionPublishForGuestModal');
+
+
 
         contributionPublishModal.addEventListener('show.bs.modal', function(event) {
             var updateLinkElement = event.relatedTarget; // updateLinkElement that triggered the modal
@@ -151,6 +190,36 @@
 
             var contributionIdControl = document.getElementById('contributionIdPublish');
             var contributionNameText = document.getElementById('contributionNamePublish');
+
+            contributionIdControl.value = contributionIdData;
+            contributionNameText.innerHTML = contributionNameData;
+        })
+
+
+        contributionPublishAllModal.addEventListener('show.bs.modal', function(event) {
+            var updateLinkElement = event.relatedTarget; // updateLinkElement that triggered the modal
+
+            var contributionIdData = updateLinkElement.getAttribute('data-contributionId');
+            var contributionNameData = updateLinkElement.getAttribute('data-contributionName');
+
+
+            var contributionIdControl = document.getElementById('contributionIdPublishAll');
+            var contributionNameText = document.getElementById('contributionNamePublishAll');
+
+            contributionIdControl.value = contributionIdData;
+            contributionNameText.innerHTML = contributionNameData;
+        })
+
+
+        contributionPublishForGuestModal.addEventListener('show.bs.modal', function(event) {
+            var updateLinkElement = event.relatedTarget; // updateLinkElement that triggered the modal
+
+            var contributionIdData = updateLinkElement.getAttribute('data-contributionId');
+            var contributionNameData = updateLinkElement.getAttribute('data-contributionName');
+
+
+            var contributionIdControl = document.getElementById('contributionIdPublishForGuest');
+            var contributionNameText = document.getElementById('contributionNamePublishForGuest');
 
             contributionIdControl.value = contributionIdData;
             contributionNameText.innerHTML = contributionNameData;

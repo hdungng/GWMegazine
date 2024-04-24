@@ -74,7 +74,7 @@
                             @endif
 
 
-                            @if (!$disabledComment)
+                            @if (!$disabledComment && !(in_array(Auth::user()->role->name, ['Admin', 'Manager'])))
                                 <div class="border rounded mt-4">
                                     <form action="{{ route('admin.contributions.comment', $contribution->id) }}"
                                         method="POST" class="comment-area-box">

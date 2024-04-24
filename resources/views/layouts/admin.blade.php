@@ -133,8 +133,7 @@
             </a>
 
             <!-- Sidebar Hover Menu Toggle Button -->
-            <div class="button-sm-hover" data-bs-toggle="tooltip" data-bs-placement="right"
-                title="Show Full Sidebar">
+            <div class="button-sm-hover" data-bs-toggle="tooltip" data-bs-placement="right" title="Show Full Sidebar">
                 <i class="ri-checkbox-blank-circle-line align-middle"></i>
             </div>
 
@@ -158,52 +157,70 @@
                 <ul class="side-nav">
                     <li class="side-nav-title">Navigation</li>
 
-                    <li class="side-nav-item">
-                        <a href="{{ route('admin.dashboard') }}" aria-expanded="false"
-                            aria-controls="sidebarDashboards" class="side-nav-link">
-                            <i class="ri-home-4-line"></i>
-                            <span> Dashboards </span>
-                        </a>
-                    </li>
+                    @if (Auth::user()->role->name != 'Admin')
+                        <li class="side-nav-item">
+                            <a href="{{ route('admin.dashboard') }}" aria-expanded="false"
+                                aria-controls="sidebarDashboards" class="side-nav-link">
+                                <i class="ri-home-4-line"></i>
+                                <span> Dashboards </span>
+                            </a>
+                        </li>
 
-                    <li class="side-nav-title">Apps</li>
+                        <li class="side-nav-title">Apps</li>
 
-                    <li class="side-nav-item">
-                        <a href="{{ route('admin.contributions.index') }}" class="side-nav-link">
-                            <i class="ri-file-list-3-line"></i>
-                            <span> Contributions </span>
-                        </a>
-                    </li>
+
+                        <li class="side-nav-item">
+                            <a href="{{ route('admin.contributions.index') }}" class="side-nav-link">
+                                <i class="ri-file-list-3-line"></i>
+                                <span> Contributions </span>
+                            </a>
+                        </li>
+                    @endif
 
                     <li class="side-nav-item">
                         <a href="{{ route('admin.users.index') }}" class="side-nav-link">
                             <i class="ri-user-3-fill"></i>
-                            <span> Users </span>
+                            @if (in_array(Auth::user()->role->name, ['Admin', 'Manager']))
+                                <span> Users </span>
+                            @else
+                                <span> Students </span>
+                            @endif
                         </a>
                     </li>
+                    @if (Auth::user()->role->name == 'Admin')
+                        <li class="side-nav-item">
+                            <a href="{{ route('admin.faculty.index') }}" class="side-nav-link">
+                                <i class="ri-school-fill"></i>
+                                <span> Faculty </span>
+                            </a>
+                        </li>
 
-                    <li class="side-nav-item">
-                        <a href="{{ route('admin.faculty.index') }}" class="side-nav-link">
-                            <i class="ri-school-fill"></i>
-                            <span> Faculty </span>
-                        </a>
-                    </li>
 
-                    <li class="side-nav-title">System</li>
+                        <li class="side-nav-title">System</li>
 
-                    <li class="side-nav-item">
-                        <a href="{{ route('admin.activity-logs.index') }}" class="side-nav-link">
-                            <i class="ri-database-2-fill"></i>
-                            <span> Activity Logs </span>
-                        </a>
-                    </li>
+                        <li class="side-nav-item">
+                            <a href="{{ route('admin.activity-logs.index') }}" class="side-nav-link">
+                                <i class="ri-database-2-fill"></i>
+                                <span> Activity Logs </span>
+                            </a>
+                        </li>
 
-                    <li class="side-nav-item">
-                        <a href="{{ route('admin.academic-year.index') }}" class="side-nav-link">
-                            <i class="ri-calendar-event-fill"></i>
-                            <span> Academic Year </span>
-                        </a>
-                    </li>
+                        <li class="side-nav-item">
+                            <a href="{{ route('admin.academic-year.index') }}" class="side-nav-link">
+                                <i class="ri-calendar-event-fill"></i>
+                                <span> Academic Year </span>
+                            </a>
+                        </li>
+                    @elseif (Auth::user()->role->name == 'Manager')
+                        <li class="side-nav-title">System</li>
+
+                        <li class="side-nav-item">
+                            <a href="{{ route('admin.activity-logs.index') }}" class="side-nav-link">
+                                <i class="ri-database-2-fill"></i>
+                                <span> Contribution Logs </span>
+                            </a>
+                        </li>
+                    @endif
                 </ul>
                 <!--- End Sidemenu -->
 

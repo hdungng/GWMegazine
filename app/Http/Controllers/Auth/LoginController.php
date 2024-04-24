@@ -30,8 +30,8 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         switch ($user->role->name) {
-            case 'Root':
             case 'Admin':
+            case 'Manager':
             case 'Coordinator':
                 return redirect()->route('admin.dashboard');
             case 'Student':
