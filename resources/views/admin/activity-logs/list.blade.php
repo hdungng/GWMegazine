@@ -16,10 +16,18 @@
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Home</a></li>
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">System </a></li>
-                                <li class="breadcrumb-item active">Activity Logs</li>
+                                @if (Auth::user()->role->name == 'Admin')
+                                    <li class="breadcrumb-item active">Activity Logs</li>
+                                @else
+                                    <li class="breadcrumb-item active">Contribution Logs</li>
+                                @endif
                             </ol>
                         </div>
-                        <h4 class="page-title">Activity Logs</h4>
+                        @if (Auth::user()->role->name == 'Admin')
+                            <h4 class="page-title">Activity Logs</h4>
+                        @else
+                            <h4 class="page-title">Contribution Logs</h4>
+                        @endif
                     </div>
                 </div>
             </div>
