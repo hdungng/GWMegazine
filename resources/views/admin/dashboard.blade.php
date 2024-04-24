@@ -19,15 +19,21 @@
             <div class="row">
                 <div class="col-12">
                     <form action="" class="hstack gap-2">
-                        <label for="academic_year">Academic Year</label>
+                        <label for="academic_year_id">Academic Year</label>
                         <div class="hstack gap-2">
-                            <select class="form-select my-2" name="academic_year" style="width: 150px">
-                                <option value="0">All</option>
-                                <option value="1">Summer 2024</option>
-                                <option value="2">Fall 2024</option>
-                                <option value="3">Snow 2024</option>
-                            </select>
-                            <button type="submit" class="btn btn-primary d-inline-block">Select</button>
+                            @if ($academicYears->count() > 0)
+                                <select class="form-select my-2" name="academic_year_id" style="width: 150px">
+                                    @foreach ($academicYears as $academicYear)
+                                        {{-- <option value="0">All</option> --}}
+                                        @if ($academicYear->id == $selectedAcademicYear->id)
+                                            <option value="{{ $academicYear->id }}" selected>{{ $academicYear->name }}</option>
+                                        @else
+                                            <option value="{{ $academicYear->id }}">{{ $academicYear->name }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                <button type="submit" class="btn btn-primary d-inline-block">Select</button>
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -40,7 +46,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="header-title text-center mb-4">Total Contribution by Faculty in
-                                    {{ $currentAcademicYear->name }}</h5>
+                                    {{ $selectedAcademicYear->name }}</h5>
 
                                 <div dir="ltr">
                                     <div class="mt-2 chartjs-chart">
@@ -55,7 +61,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="header-title text-center mb-4">Number of Contributor Students by Faculty in
-                                    {{ $currentAcademicYear->name }}</h5>
+                                    {{ $selectedAcademicYear->name }}</h5>
 
                                 <div dir="ltr">
                                     <div class="mt-2 chartjs-chart">
@@ -88,7 +94,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="header-title text-center mb-4">Number of Contributor Students in
-                                    {{ $currentAcademicYear->name }}</h5>
+                                    {{ $selectedAcademicYear->name }}</h5>
 
                                 <div dir="ltr">
                                     <div class="mt-2 chartjs-chart">
@@ -103,7 +109,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="header-title text-center mb-4">Number of Contribution: With/Without Comments in
-                                    {{ $currentAcademicYear->name }}</h5>
+                                    {{ $selectedAcademicYear->name }}</h5>
 
                                 <div dir="ltr">
                                     <div class="mt-2 chartjs-chart">

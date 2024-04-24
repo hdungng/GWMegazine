@@ -57,7 +57,7 @@ Route::prefix('admin')->middleware('role.auth:Admin,Manager,Coordinator')->group
     Route::get('/', [App\Http\Controllers\AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     // Define child routes (CRUD operations)
-    Route::prefix('users')->group(function () {
+    Route::prefix('users')->middleware('role.auth:Admin,Coordinator')->group(function () {
         Route::get('/', [App\Http\Controllers\AdminUserController::class, 'index'])->name('admin.users.index');
         Route::get('/create', [App\Http\Controllers\AdminUserController::class, 'create'])->name('admin.users.create');
         Route::post('/store', [App\Http\Controllers\AdminUserController::class, 'store'])->name('admin.users.store');

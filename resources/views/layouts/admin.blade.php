@@ -177,16 +177,19 @@
                         </li>
                     @endif
 
-                    <li class="side-nav-item">
-                        <a href="{{ route('admin.users.index') }}" class="side-nav-link">
-                            <i class="ri-user-3-fill"></i>
-                            @if (in_array(Auth::user()->role->name, ['Admin', 'Manager']))
-                                <span> Users </span>
-                            @else
-                                <span> Students </span>
-                            @endif
-                        </a>
-                    </li>
+                    @if (Auth::user()->role->name != 'Manager')
+                        <li class="side-nav-item">
+                            <a href="{{ route('admin.users.index') }}" class="side-nav-link">
+                                <i class="ri-user-3-fill"></i>
+                                @if (in_array(Auth::user()->role->name, ['Admin', 'Manager']))
+                                    <span> Users </span>
+                                @else
+                                    <span> Students </span>
+                                @endif
+                            </a>
+                        </li>
+                    @endif
+
                     @if (Auth::user()->role->name == 'Admin')
                         <li class="side-nav-item">
                             <a href="{{ route('admin.faculty.index') }}" class="side-nav-link">

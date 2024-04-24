@@ -30,7 +30,7 @@
                     <div class="card-body">
                         <div class="academicYearContainer">
                             <div class="row">
-                                <div class="col-md-5">
+                                {{-- <div class="col-md-5">
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="header-title">Add Academic Year</h4>
@@ -92,9 +92,14 @@
                                             </div>
                                         </div> <!-- end card-body -->
                                     </div> <!-- end card-->
-                                </div> <!-- end col -->
+                                </div> --}}
+                                <div class="hstack mb-3">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#academicYearAddModal"
+                                        class="btn btn-outline-primary ms-auto">Add
+                                        Academic Year</a>
+                                </div>
 
-                                <div class="col-md-7">
+                                <div class="col-md-12">
                                     <div class="card">
                                         <div class="card-body academicYearTableWrapper">
                                             @if ($academicYears->count() > 0)
@@ -164,7 +169,7 @@
                                             @else
                                                 <p class="text-center">No data currently available.</p>
                                             @endif
-
+                                            @include('admin.academic-years.add-modal')
                                             <!-- Modal -->
                                             @include('admin.academic-years.edit-modal')
 
@@ -204,15 +209,24 @@
     <script src="{{ url('public/admin/vendor/flatpickr/flatpickr.min.js') }}"></script>
 
     <script>
-        flatpickr("#datetimepicker", {
-            enableTime: true,
-            dateFormat: "F j, Y H:i:S", // Adjust the date format here
-            time_24hr: true,
-        });
-
+        var academicYearAddModal = document.getElementById('academicYearAddModal');
         var academicYearEditModal = document.getElementById('academicYearEditModal');
         var academicYearDeleteModal = document.getElementById('academicYearDeleteModal');
         var academicYearStatusModal = document.getElementById('academicYearStatusModal');
+
+
+        academicYearAddModal.addEventListener('show.bs.modal', function(event) {
+            flatpickr(".datetimepickerAdd", {
+                enableTime: true,
+                dateFormat: "F j, Y H:i:S", // Adjust the date format here
+                time_24hr: true,
+                onReady: function(selectedDates, dateStr, instance) {
+                    if (dateStr) {
+                        instance.jumpToDate(new Date(dateStr));
+                    }
+                }
+            });
+        });
 
 
         academicYearEditModal.addEventListener('show.bs.modal', function(event) {

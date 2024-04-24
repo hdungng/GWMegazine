@@ -10,6 +10,7 @@ use App\Enums\UserRoleEnum;
 use App\Models\AcademicYear;
 use App\Models\Faculty;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -17,9 +18,13 @@ use Illuminate\Support\Facades\DB;
 class AdminDashboardController extends Controller
 {
     //
-    public function index()
+    public function index(Request $request)
     {
         $currentAcademicYear = AcademicYear::where("status", '=', AcademicYearStatusEnum::SELECTED)->first();
+
+        $academicYears = AcademicYear::all();
+
+        $selectedAcademicYear = $request->academic_year_id ? AcademicYear::find($request->academic_year_id) : $currentAcademicYear;
 
         if (Auth::user()->role_id == UserRoleEnum::ADMIN) {
             return redirect()->route('admin.users.index');
@@ -31,7 +36,7 @@ class AdminDashboardController extends Controller
                 ->join('contributions', 'users.id', '=', 'contributions.user_id')
                 ->join('faculties', 'users.faculty_id', '=', 'faculties.id')
                 ->whereIn('faculties.short_name', $chart1->facultyNames)
-                ->where('contributions.academic_year_id', '=', $currentAcademicYear->id)
+                ->where('contributions.academic_year_id', '=', $selectedAcademicYear->id)
                 ->groupBy('faculty_id')
                 ->pluck('total_contributions')
                 ->toArray();
@@ -46,7 +51,7 @@ class AdminDashboardController extends Controller
                 ->join('contributions', 'users.id', '=', 'contributions.user_id')
                 ->join('faculties', 'users.faculty_id', '=', 'faculties.id')
                 ->whereIn('faculties.short_name', $chart2->facultyNames)
-                ->where('contributions.academic_year_id', '=', $currentAcademicYear->id)
+                ->where('contributions.academic_year_id', '=', $selectedAcademicYear->id)
                 ->groupBy('faculty_id')
                 ->pluck('total_students')
                 ->toArray();
@@ -122,7 +127,7 @@ class AdminDashboardController extends Controller
                 ->join('faculties', 'users.faculty_id', '=', 'faculties.id')
                 ->where('faculties.id', '=', $currentFaculty->id)
                 ->where('users.role_id', '=', UserRoleEnum::STUDENT)
-                ->where('contributions.academic_year_id', '=', $currentAcademicYear->id)
+                ->where('contributions.academic_year_id', '=', $selectedAcademicYear->id)
                 ->first()
                 ->total_students;
 
@@ -145,7 +150,7 @@ class AdminDashboardController extends Controller
                 ->join('users', 'users.id', '=', 'contributions.user_id')
                 ->join('faculties', 'users.faculty_id', '=', 'faculties.id')
                 ->where('faculties.id', '=', $currentFaculty->id)
-                ->where('contributions.academic_year_id', '=', $currentAcademicYear->id)
+                ->where('contributions.academic_year_id', '=', $selectedAcademicYear->id)
                 ->distinct('contributions.id')
                 ->count();
 
@@ -155,7 +160,7 @@ class AdminDashboardController extends Controller
                 ->join('users', 'users.id', '=', 'contributions.user_id')
                 ->join('faculties', 'users.faculty_id', '=', 'faculties.id')
                 ->where('faculties.id', '=', $currentFaculty->id)
-                ->where('contributions.academic_year_id', '=', $currentAcademicYear->id)
+                ->where('contributions.academic_year_id', '=', $selectedAcademicYear->id)
                 ->whereNull('comments.contribution_id')
                 ->distinct('contributions.id')
                 ->count();
@@ -181,6 +186,6 @@ class AdminDashboardController extends Controller
             $chart3 = new BarChart($contributionsAcademicYears);
         }
 
-        return view('admin.dashboard', compact('chart1', 'chart2', 'chart3', 'currentAcademicYear'));
+        return view('admin.dashboard', compact('chart1', 'chart2', 'chart3', 'selectedAcademicYear', 'academicYears'));
     }
 }

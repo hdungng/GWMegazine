@@ -26,7 +26,7 @@ class AdminAcademicYearController extends Controller
     public function store(Request $request)
     {
         // Validate the incoming request data
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|unique:academic_years|max:255',
             'starting_date' => 'required|date',
             'closure_date' => 'required|date|after:starting_date',
@@ -43,6 +43,15 @@ class AdminAcademicYearController extends Controller
             'closure_date' => 'Closure date',
             'final_closure_date' => 'Final closure date'
         ]);
+
+        if ($validator->fails()) {
+            $errorMessage = '';
+            foreach ($validator->errors()->all() as $error) {
+                $errorMessage .= '- ' . $error . '<br>';
+            }
+            toastr()->error($errorMessage, 'Error', ['timeOut' => 5000]);
+            return back();
+        }
 
         $starting_date = DateTime::createFromFormat('F d, Y H:i:s', $request->starting_date)
             ->format('Y-m-d H:i:s');

@@ -38,29 +38,10 @@ class AdminUserController extends Controller
                     ->orderBy('users.created_at', 'desc')
                     ->get();
                 break;
-            case "Manager":
-                $users = User::select('users.*', 'roles.name AS role_name')
-                    ->selectRaw("CASE 
-                            WHEN roles.name IN ('Student', 'Guest') THEN faculties.name 
-                            ELSE coordinator_faculty.name 
-                        END AS faculty_name")
-                    ->join('roles', 'users.role_id', '=', 'roles.id')
-                    ->leftJoin('faculties', 'users.faculty_id', '=', 'faculties.id')
-                    ->leftJoin('faculties as coordinator_faculty', 'users.id', '=', 'coordinator_faculty.coordinator_id')
-                    ->whereNotIn('role_id', [UserRoleEnum::ADMIN, UserRoleEnum::MANAGER])
-                    ->orderBy('role_name', 'asc')
-                    ->orderBy('users.created_at', 'desc')
-                    ->get();
-                break;
             case "Coordinator":
-                $users = User::select('users.*', 'roles.name AS role_name')
-                    ->selectRaw("CASE 
-                            WHEN roles.name IN ('Student', 'Guest') THEN faculties.name 
-                            ELSE coordinator_faculty.name 
-                        END AS faculty_name")
+                $users = User::select('users.*', 'roles.name AS role_name', 'faculties.name AS faculty_name')
                     ->join('roles', 'users.role_id', '=', 'roles.id')
-                    ->leftJoin('faculties', 'users.faculty_id', '=', 'faculties.id')
-                    ->leftJoin('faculties as coordinator_faculty', 'users.id', '=', 'coordinator_faculty.coordinator_id')
+                    ->join('faculties', 'users.faculty_id', '=', 'faculties.id')
                     ->whereIn('role_id', [UserRoleEnum::STUDENT, UserRoleEnum::GUEST])
                     ->where('faculties.coordinator_id', '=', Auth::user()->id)
                     ->orderBy('role_name', 'asc')
@@ -321,7 +302,7 @@ class AdminUserController extends Controller
 
         $contributionExists = Contribution::where('user_id', '=', $user->id)->first();
 
-        if($contributionExists) {
+        if ($contributionExists) {
             toastr()->error('You cannot delete this student due to existing contributions!', 'Error', ['timeOut' => 5000]);
             return back();
         }
