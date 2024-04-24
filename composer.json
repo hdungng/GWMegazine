@@ -13,6 +13,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
         "phpoffice/phpword": "^1.2",
+        "phpzip/phpzip": "^2.0",
         "yoeunes/toastr": "^2.3"
     },
     "require-dev": {
