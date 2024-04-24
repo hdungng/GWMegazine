@@ -49,10 +49,8 @@
                                                     <div class="like-box hstack gap-3 ms-auto">
                                                         <span><i class="fa-solid fa-heart fa-xl"
                                                                 style="color: #FC6589;"></i></span>
-                                                        <span class="stats-num">50</span>
+                                                        <span class="stats-num">{{ count($contribution->likes) }}</span>
                                                     </div>
-                                                    <span class="share-btn"><i class="fa-solid fa-share-nodes fa-xl"
-                                                            style="color: #95A4DB;"></i></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -89,21 +87,22 @@
                             </div>
                         </div>
                     </form>
+                    @if (Auth::user()->role->name != 'Guest')
+                        <div class="recommended-topics-box mt-5">
+                            <h5 class="fw-semibold">Faculties Available</h5>
 
-                    <div class="recommended-topics-box mt-5">
-                        <h5 class="fw-semibold">Faculties Available</h5>
-
-                        @if ($faculties->count() > 0)
-                            <div class="topics-container">
-                                @foreach ($faculties as $faculty)
-                                    <a href="{{ route('home.filter', $faculty->id) }}" class="topic-item"
-                                        style="background: {{ $faculty->chart_color }}">{{ $faculty->name }}</a>
-                                @endforeach
-                            </div>
-                        @else
-                            <p class="mt-5">No faculties currently available.</p>
-                        @endif
-                    </div>
+                            @if ($faculties->count() > 0)
+                                <div class="topics-container">
+                                    @foreach ($faculties as $faculty)
+                                        <a href="{{ route('home.filter', $faculty->id) }}" class="topic-item"
+                                            style="background: {{ $faculty->chart_color }}">{{ $faculty->name }}</a>
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="mt-5">No faculties currently available.</p>
+                            @endif
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
