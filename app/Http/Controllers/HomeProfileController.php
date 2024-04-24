@@ -3,28 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
-use App\Models\Faculty;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Enums\AcademicYearStatusEnum;
+use App\Models\AcademicYear;
+use Carbon\Carbon;
 
 class HomeProfileController extends Controller
 {
     //
-    public $faculties;
-
+    public $startingDateOpen;
 
     public function __construct()
     {
-        $this->faculties = Faculty::orderBy('created_at', 'desc')->get();
+        $currentAcademicYear = AcademicYear::where("status", '=', AcademicYearStatusEnum::SELECTED)->first();
+        $currentDateTime = Carbon::now();
+
+        if ($currentDateTime->gt($currentAcademicYear->starting_date)) {
+            $this->startingDateOpen = true;
+        } else {
+            $this->startingDateOpen = false;
+        }
     }
 
     function index()
     {
         return view("home.user-profile", [
-            'faculties' => $this->faculties
+            'startingDateOpen' => $this->startingDateOpen,
         ]);
     }
 
