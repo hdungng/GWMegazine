@@ -1,5 +1,5 @@
 <div class="modal fade" id="academicYearEditModal" tabindex="-1" aria-labelledby="academicYearEditLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <form method="POST" action="{{ route('admin.academic-year.update') }}">
                 <div class="modal-header">
@@ -7,12 +7,22 @@
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="height: 200px;">
                     @csrf
                     <input type="hidden" name="academicYearId" id="academicYearIdEdit">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="academicYearNameEdit" name="name">
                         <label for="academicYearNameEdit">Academic Year Name <span class="text-danger">*</span></label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">Starting Date <span class="text-danger">*</span></label>
+                                <input type="text" id="startingDateEdit" class="form-control datetimepickerEdit"
+                                    name="starting_date" placeholder="Choose closure date...">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row">

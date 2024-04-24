@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\AcademicYearStatusEnum;
 use App\Models\AcademicYear;
 use App\Models\ActivityLog;
+use App\Models\Contribution;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class AdminAcademicYearController extends Controller
     //
     public function index()
     {
-        $academicYears = AcademicYear::orderBy("created_at", "desc")->get();
+        $academicYears = AcademicYear::orderBy("created_at", "asc")->get();
 
         return view('admin.academic-years.overview', compact('academicYears'));
     }
@@ -27,18 +28,24 @@ class AdminAcademicYearController extends Controller
         // Validate the incoming request data
         $request->validate([
             'name' => 'required|string|unique:academic_years|max:255',
-            'closure_date' => 'required|date',
+            'starting_date' => 'required|date',
+            'closure_date' => 'required|date|after:starting_date',
             'final_closure_date' => 'required|date|after:closure_date',
         ], [
             'required' => ":attribute is required",
             'max' => ":attribute must be at most :max characters long",
             'unique' => ":attribute already exists",
+            'closure_date.after' => 'The final closure date must be after the starting date.',
             'final_closure_date.after' => 'The final closure date must be after the closure date.',
         ], [
             'name' => "Academic year name",
+            'starting_date' => 'Starting date',
             'closure_date' => 'Closure date',
             'final_closure_date' => 'Final closure date'
         ]);
+
+        $starting_date = DateTime::createFromFormat('F d, Y H:i:s', $request->starting_date)
+            ->format('Y-m-d H:i:s');
 
         $closure_date = DateTime::createFromFormat('F d, Y H:i:s', $request->closure_date)
             ->format('Y-m-d H:i:s');
@@ -49,6 +56,7 @@ class AdminAcademicYearController extends Controller
         $academicYearModel = new AcademicYear();
         $academicYearModel->id = Str::uuid();
         $academicYearModel->name = $request->name;
+        $academicYearModel->$starting_date = $$starting_date;
         $academicYearModel->closure_date = $closure_date;
         $academicYearModel->final_closure_date = $final_closure_date;
         $academicYearModel->status = AcademicYearStatusEnum::NOT_SELECTED;
@@ -70,27 +78,33 @@ class AdminAcademicYearController extends Controller
         // Validate the incoming request data
         $validator = Validator::make($request->all(), [
             'name' => 'required', 'string', 'max:255', Rule::unique('academic_years')->ignore($request->name),
-            'closure_date' => 'required|date',
+            'starting_date' => 'required|date',
+            'closure_date' => 'required|date|after:starting_date',
             'final_closure_date' => 'required|date|after:closure_date',
         ], [
             'required' => ":attribute is required",
             'max' => ":attribute must be at most :max characters long",
             'unique' => ":attribute already exists",
+            'closure_date.after' => 'The final closure date must be after the starting date.',
             'final_closure_date.after' => 'The final closure date must be after the closure date.',
         ], [
             'name' => "Academic year name",
+            'starting_date' => 'Starting date',
             'closure_date' => 'Closure date',
             'final_closure_date' => 'Final closure date'
         ]);
 
-        if( $validator->fails() ){
+        if ($validator->fails()) {
             $errorMessage = '';
-            foreach( $validator->errors()->all() as $error ){
+            foreach ($validator->errors()->all() as $error) {
                 $errorMessage .= '- ' . $error . '<br>';
             }
             toastr()->error($errorMessage, 'Error', ['timeOut' => 5000]);
             return back();
         }
+
+        $starting_date = DateTime::createFromFormat('F d, Y H:i:s', $request->starting_date)
+            ->format('Y-m-d H:i:s');
 
         $closure_date = DateTime::createFromFormat('F d, Y H:i:s', $request->closure_date)
             ->format('Y-m-d H:i:s');
@@ -107,6 +121,7 @@ class AdminAcademicYearController extends Controller
         }
 
         $academicYearModel->name = $request->name;
+        $academicYearModel->starting_date = $starting_date;
         $academicYearModel->closure_date = $closure_date;
         $academicYearModel->final_closure_date = $final_closure_date;
         $academicYearModel->save();
@@ -126,7 +141,19 @@ class AdminAcademicYearController extends Controller
         $academicYearModel = AcademicYear::find($request->academicYearIdDelete);
 
         if (!$academicYearModel) {
-            toastr()->error('User is not found!', 'Error', ['timeOut' => 5000]);
+            toastr()->error('Academic Year is not found!', 'Error', ['timeOut' => 5000]);
+            return back();
+        }
+
+        if ($academicYearModel->status == AcademicYearStatusEnum::SELECTED) {
+            toastr()->error('Academic Year selected cannot be deleted!', 'Error', ['timeOut' => 5000]);
+            return back();
+        }
+
+        $contributionExists = Contribution::where('academic_year_id', '=', $academicYearModel->id)->first();
+
+        if ($contributionExists) {
+            toastr()->error('You cannot delete this academic year due to existing contributions!', 'Error', ['timeOut' => 5000]);
             return back();
         }
 

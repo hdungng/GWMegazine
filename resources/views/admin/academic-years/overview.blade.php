@@ -51,6 +51,17 @@
                                                     </div>
 
                                                     <div class="mb-3">
+                                                        <label class="form-label">Starting Date <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="text" id="datetimepicker"
+                                                            class="form-control @error('starting_date') is-invalid @enderror"
+                                                            name="starting_date" placeholder="Choose starting date...">
+                                                        @error('starting_date')
+                                                            <small class="form-text text-danger">{{ $message }}</small>
+                                                        @enderror
+                                                    </div>
+
+                                                    <div class="mb-3">
                                                         <label class="form-label">Closure Date <span
                                                                 class="text-danger">*</span></label>
                                                         <input type="text" id="datetimepicker"
@@ -92,6 +103,7 @@
                                                         <tr>
                                                             <th>#</th>
                                                             <th>Academic Year Name</th>
+                                                            <th>Starting Date</th>
                                                             <th>Closure Date</th>
                                                             <th>Final Closure Date</th>
                                                             <th></th>
@@ -103,6 +115,8 @@
                                                             <tr>
                                                                 <td>{{ $loop->iteration }}</td>
                                                                 <td>{{ $academicYear->name }}</td>
+                                                                <td>{{ (new DateTime($academicYear->starting_date))->format('F d, Y H:i:s') }}
+                                                                </td>
                                                                 <td>{{ (new DateTime($academicYear->closure_date))->format('F d, Y H:i:s') }}
                                                                 </td>
                                                                 <td>{{ (new DateTime($academicYear->final_closure_date))->format('F d, Y H:i:s') }}
@@ -132,6 +146,7 @@
                                                                                 data-bs-target="#academicYearEditModal"
                                                                                 data-academicYearId="{{ $academicYear->id }}"
                                                                                 data-academicYearName="{{ $academicYear->name }}"
+                                                                                data-startingDate="{{ (new DateTime($academicYear->starting_date))->format('F d, Y H:i:s') }}"
                                                                                 data-closureDate="{{ (new DateTime($academicYear->closure_date))->format('F d, Y H:i:s') }}"
                                                                                 data-finalClosureDate="{{ (new DateTime($academicYear->final_closure_date))->format('F d, Y H:i:s') }}">Update</a>
                                                                         </li>
@@ -206,17 +221,20 @@
 
             var academicYearIdData = updateLinkElement.getAttribute('data-academicYearId');
             var academicYearNameData = updateLinkElement.getAttribute('data-academicYearName');
+            var startingDateData = updateLinkElement.getAttribute('data-startingDate');
             var closureDateData = updateLinkElement.getAttribute('data-closureDate');
             var finalClosureDateData = updateLinkElement.getAttribute('data-finalClosureDate');
 
 
             var academicYearIdEditControl = document.getElementById('academicYearIdEdit');
             var academicYearNameEditControl = document.getElementById('academicYearNameEdit');
+            var startingDateEditControl = document.getElementById('startingDateEdit');
             var closureDateEditControl = document.getElementById('closureDateEdit');
             var finalClosureDateEditControl = document.getElementById('finalClosureDateEdit');
 
             academicYearIdEditControl.value = academicYearIdData;
             academicYearNameEditControl.value = academicYearNameData;
+            startingDateEditControl.value = startingDateData;
             closureDateEditControl.value = closureDateData;
             finalClosureDateEditControl.value = finalClosureDateData;
 
