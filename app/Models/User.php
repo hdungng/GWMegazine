@@ -72,4 +72,9 @@ class User extends Authenticatable
 
         return in_array($this->role->name, $allowedRoles);
     }
+
+    public function contributions()
+    {
+        return $this->hasMany(User::class);
+    }
 }

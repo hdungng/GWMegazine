@@ -27,4 +27,9 @@ class Contribution extends Model
     {
         return $this->hasMany(Like::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
