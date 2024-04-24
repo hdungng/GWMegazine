@@ -9,6 +9,7 @@ use App\Models\Comment;
 use App\Models\Contribution;
 use App\Models\Faculty;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -30,18 +31,22 @@ class AdminContributionController extends Controller
                 ->where('faculties.coordinator_id', Auth::user()->id)->first();
 
 
-            $contributions = Contribution::select(
-                'contributions.*',
-                'users.username AS student_name',
-                'faculties.name AS faculty_name',
-                'academic_years.name AS academic_year_name'
-            )
-                ->join('users', 'contributions.user_id', '=', 'users.id')
-                ->join('faculties', 'users.faculty_id', '=', 'faculties.id')
-                ->join('academic_years', 'contributions.academic_year_id', '=', 'academic_years.id')
-                ->orderBy('created_at', 'desc')
-                ->where('faculty_id', '=', $currentFaculty->id)
-                ->get();
+            if ($currentFaculty) {
+                $contributions = Contribution::select(
+                    'contributions.*',
+                    'users.username AS student_name',
+                    'faculties.name AS faculty_name',
+                    'academic_years.name AS academic_year_name'
+                )
+                    ->join('users', 'contributions.user_id', '=', 'users.id')
+                    ->join('faculties', 'users.faculty_id', '=', 'faculties.id')
+                    ->join('academic_years', 'contributions.academic_year_id', '=', 'academic_years.id')
+                    ->orderBy('created_at', 'desc')
+                    ->where('faculty_id', '=', $currentFaculty->id)
+                    ->get();
+            } else {
+                $contributions = new Collection();
+            }
         } else {
             $contributions = Contribution::select(
                 'contributions.*',
@@ -108,7 +113,6 @@ class AdminContributionController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'title' => 'required|string|max:255|min:3',
             'description' => 'required|string|max:500|min:20',
             'wordDocument' => 'mimes:doc,docx',
             'contributionImage' => 'image|mimes:png,jpg,jpeg',
@@ -120,7 +124,6 @@ class AdminContributionController extends Controller
             'image' => ":attribute must be an image file in jpeg, png, bmp, or gif format",
             'square' => ":attribute must be a square image",
         ], [
-            'title' => 'Contribution Title',
             'description' => 'Description',
             'wordDocument' => 'Word Document',
             'contributionImage' => 'Contribution Image',
@@ -245,6 +248,51 @@ class AdminContributionController extends Controller
         toastr()->success('Contribution published successfully!', 'Success', ['timeOut' => 5000]);
         return redirect()->route('admin.contributions.index');
     }
+
+    public function publishAll(Request $request)
+    {
+        $contribution = Contribution::find($request->contributionIdPublishAll);
+
+        if (!$contribution) {
+            toastr()->error('Contribution is not found!', 'Error', ['timeOut' => 5000]);
+            return back();
+        }
+
+        $contribution->status = ContributionStatusEnum::PUBLISHED_ALL;
+        $contribution->save();
+
+        ActivityLog::create([
+            'id' => Str::uuid(),
+            'content' => 'Contribution ' .  $contribution->title  . ' published all successfully!',
+            'user_id' => Auth::user()->id,
+        ]);
+
+        toastr()->success('Contribution published all successfully!', 'Success', ['timeOut' => 5000]);
+        return redirect()->route('admin.contributions.index');
+    }
+
+    public function publishForGuest(Request $request)
+    {
+        $contribution = Contribution::find($request->contributionIdPublishForGuest);
+
+        if (!$contribution) {
+            toastr()->error('Contribution is not found!', 'Error', ['timeOut' => 5000]);
+            return back();
+        }
+
+        $contribution->status = ContributionStatusEnum::PUBLISHED_FOR_GUEST;
+        $contribution->save();
+
+        ActivityLog::create([
+            'id' => Str::uuid(),
+            'content' => 'Contribution ' .  $contribution->title  . ' published for guest successfully!',
+            'user_id' => Auth::user()->id,
+        ]);
+
+        toastr()->success('Contribution published all successfully!', 'Success', ['timeOut' => 5000]);
+        return redirect()->route('admin.contributions.index');
+    }
+
 
     public function comment(Request $request, $id)
     {

@@ -8,4 +8,7 @@ class ContributionStatusEnum
 
     const PUBLISHED = 1;
 
+    const PUBLISHED_FOR_GUEST = 2;
+
+    const PUBLISHED_ALL = 3;
 }

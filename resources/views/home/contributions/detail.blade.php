@@ -41,6 +41,14 @@
                                         <span class="badge text-bg-success">Published</span>
                                     @break
 
+                                    @case(2)
+                                        <span class="badge text-bg-danger">Published For Guest</span>
+                                    @break
+
+                                    @case(3)
+                                        <span class="badge text-bg-primary">Published All</span>
+                                    @break
+
                                     @default
                                         <span class="badge text-bg-warning">Pending</span>
                                 @endswitch

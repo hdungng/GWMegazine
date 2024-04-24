@@ -23,55 +23,64 @@ use Illuminate\Support\Str;
 class HomeContributionController extends Controller
 {
     //
+    public $currentAcademicYear;
     public $dayLeft;
     public $hoursLeft;
 
-    public $faculties;
-
+    public $startingDateOpen;
 
     public $closedContribution;
 
     public $closedContributionAdd;
 
+    public $faculties;
 
     public function __construct()
     {
-        $this->faculties = Faculty::orderBy('created_at', 'desc')->get();
-
-
-        $currentAcademicYear = AcademicYear::where("status", '=', AcademicYearStatusEnum::SELECTED)->first();
+        $this->currentAcademicYear = AcademicYear::where("status", '=', AcademicYearStatusEnum::SELECTED)->first();
         $currentDateTime = Carbon::now();
 
         $this->closedContribution = null;
         $this->closedContributionAdd = false;
 
-        if ($currentDateTime->gt($currentAcademicYear->closure_date)) {
+        if ($currentDateTime->gt($this->currentAcademicYear->closure_date)) {
             $this->closedContributionAdd = true;
         }
 
-        if ($currentDateTime->gt($currentAcademicYear->final_closure_date)) {
+        if ($currentDateTime->gt($this->currentAcademicYear->final_closure_date)) {
             $this->closedContribution = true;
         } else {
             // The current time is before the deadline
             $this->closedContribution = false;
 
-            $this->dayLeft = $currentDateTime->diff($currentAcademicYear->final_closure_date)->days;
-            $this->hoursLeft = $currentDateTime->diff($currentAcademicYear->final_closure_date)->h;
+            $this->dayLeft = $currentDateTime->diff($this->currentAcademicYear->final_closure_date)->days;
+            $this->hoursLeft = $currentDateTime->diff($this->currentAcademicYear->final_closure_date)->h;
         }
+
+        if ($currentDateTime->gt($this->currentAcademicYear->starting_date)) {
+            $this->startingDateOpen = true;
+        } else {
+            $this->startingDateOpen = false;
+        }
+
+        $this->faculties = Faculty::orderBy('created_at', 'desc')->get();
     }
 
     public function index()
     {
-        $contributions = Contribution::where("user_id", Auth::user()->id)->get();
+        $contributions = Contribution::where("user_id", Auth::user()->id)
+            ->where('academic_year_id', '=', $this->currentAcademicYear->id)
+            ->get();
 
         return view(
             "home.contributions.list",
             [
+                'startingDateOpen' => $this->startingDateOpen,
                 'dayLeft' => $this->dayLeft,
                 'hoursLeft' => $this->hoursLeft,
                 'closedContributionAdd' => $this->closedContributionAdd,
-                'faculties' => $this->faculties,
-                'contributions' => $contributions
+                'contributions' => $contributions,
+                'faculties' => $this->faculties
             ]
         );
     }
@@ -102,29 +111,31 @@ class HomeContributionController extends Controller
         $disabledComment = now() >= $contribution->created_at->addDays(14);
 
         return view("home.contributions.detail", [
+            'startingDateOpen' => $this->startingDateOpen,
             'dayLeft' => $this->dayLeft,
             'hoursLeft' => $this->hoursLeft,
             'closedContribution' => $this->closedContribution,
             'contribution' => $contribution,
             'comments' => $comments,
-            'faculties' => $this->faculties,
-            'disabledComment' => $disabledComment
+            'disabledComment' => $disabledComment,
+            'faculties' => $this->faculties
         ]);
     }
 
     public function create()
     {
-        $currentAcademicYear = AcademicYear::where("status", '=', AcademicYearStatusEnum::SELECTED)->first();
+        $this->currentAcademicYear = AcademicYear::where("status", '=', AcademicYearStatusEnum::SELECTED)->first();
 
         if ($this->closedContributionAdd) {
             toastr()->error('Sorry, currently the closure date is over!', 'Error', ['timeOut' => 5000]);
             return redirect()->back();
         }
         return view("home.contributions.create", [
+            'startingDateOpen' => $this->startingDateOpen,
             'dayLeft' => $this->dayLeft,
             'hoursLeft' => $this->hoursLeft,
-            'faculties' => $this->faculties,
-            'currentAcademicYear' => $currentAcademicYear->name
+            'currentAcademicYear' => $this->currentAcademicYear->name,
+            'faculties' => $this->faculties
         ]);
     }
 
@@ -153,9 +164,6 @@ class HomeContributionController extends Controller
             'wordDocument' => 'Word Document',
             'contributionImage' => 'Contribution Image',
         ]);
-
-        //GET CURRENT ACADEMIC YEAR ACTIVE
-        $currentAcademicYear = AcademicYear::where('status', 1)->first();
 
         // GET STUDENT'S COORDINATOR EMAIL
         $coordinator = User::select('users.*')
@@ -210,7 +218,7 @@ class HomeContributionController extends Controller
         $contribution->image_url = $contributionImage;
         $contribution->html_url = $html_url_model;
         $contribution->word_url = $contributionWord;
-        $contribution->academic_year_id = $currentAcademicYear->id;
+        $contribution->academic_year_id = $this->currentAcademicYear->id;
 
 
         $contributionSavedId = $contribution->id;
@@ -237,7 +245,7 @@ class HomeContributionController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $currentAcademicYear = AcademicYear::where("status", '=', AcademicYearStatusEnum::SELECTED)->first();
+        $this->currentAcademicYear = AcademicYear::where("status", '=', AcademicYearStatusEnum::SELECTED)->first();
 
         $contribution = Contribution::find($id);
 
@@ -253,11 +261,12 @@ class HomeContributionController extends Controller
 
 
         return view("home.contributions.edit", [
+            'startingDateOpen' => $this->startingDateOpen,
             'dayLeft' => $this->dayLeft,
             'hoursLeft' => $this->hoursLeft,
-            'currentAcademicYear' => $currentAcademicYear->name,
-            'faculties' => $this->faculties,
+            'currentAcademicYear' => $this->currentAcademicYear->name,
             'contribution' => $contribution,
+            'faculties' => $this->faculties
         ]);
     }
 
@@ -269,7 +278,6 @@ class HomeContributionController extends Controller
         }
 
         $request->validate([
-            'title' => 'required|string|max:255|min:3',
             'description' => 'required|string|max:500|min:20',
             'wordDocument' => 'mimes:doc,docx',
             'contributionImage' => 'image|mimes:png,jpg,jpeg',
@@ -281,7 +289,6 @@ class HomeContributionController extends Controller
             'image' => ":attribute must be an image file in jpeg, png, bmp, or gif format",
             'square' => ":attribute must be a square image",
         ], [
-            'title' => 'Contribution Title',
             'description' => 'Description',
             'wordDocument' => 'Word Document',
             'contributionImage' => 'Contribution Image',
