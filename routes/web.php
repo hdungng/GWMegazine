@@ -15,11 +15,13 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home.main-page');
 Route::get('/home-contribution/{id}', [App\Http\Controllers\HomeController::class, 'detail'])->name('home.detail');
 Route::post('/home-contribution/search', [App\Http\Controllers\HomeController::class, 'search'])->name('home.search');
 Route::get('/home-contribution/filter/{id}', [App\Http\Controllers\HomeController::class, 'filter'])->name('home.filter');
 Route::get('/get-total-like/{id}', [App\Http\Controllers\LikeController::class, 'getTotalLike'])->name('home.getTotalLike');
+
 
 
 Route::prefix('contributions')->middleware('role.auth:Student')->group(function () {
@@ -51,7 +53,7 @@ Route::prefix('user-profile')->middleware('role.auth:Student,Guest')->group(func
 
 Auth::routes();
 
-Route::prefix('admin')->middleware('role.auth:Root,Admin,Coordinator')->group(function () {
+Route::prefix('admin')->middleware('role.auth:Admin,Manager,Coordinator')->group(function () {
     Route::get('/', [App\Http\Controllers\AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     // Define child routes (CRUD operations)
@@ -64,31 +66,36 @@ Route::prefix('admin')->middleware('role.auth:Root,Admin,Coordinator')->group(fu
         Route::post('/delete', [App\Http\Controllers\AdminUserController::class, 'delete'])->name('admin.users.delete');
     });
 
+    Route::get('/download', [App\Http\Controllers\DownloadController::class, 'downloadFiles'])->name('admin.downloadFiles');
+    Route::get('/download-file/{id}', [App\Http\Controllers\DownloadController::class, 'downloadFile'])->name('admin.download-file');
 
-    Route::prefix('contributions')->group(function () {
+
+    Route::prefix('contributions')->middleware('role.auth:Manager,Coordinator')->group(function () {
         Route::get('/', [App\Http\Controllers\AdminContributionController::class, 'index'])->name('admin.contributions.index');
         Route::get('/detail/{id}', [App\Http\Controllers\AdminContributionController::class, 'detail'])->name('admin.contributions.detail');
         Route::get('/preview/{id}', [App\Http\Controllers\AdminContributionController::class, 'preview'])->name('admin.contributions.preview');
         Route::get('/edit/{id}', [App\Http\Controllers\AdminContributionController::class, 'edit'])->name('admin.contributions.edit');
         Route::post('/comment/{id}', [App\Http\Controllers\AdminContributionController::class, 'comment'])->name('admin.contributions.comment');
         Route::post('/publish', [App\Http\Controllers\AdminContributionController::class, 'publish'])->name('admin.contributions.publish');
+        Route::post('/publish-for-guest', [App\Http\Controllers\AdminContributionController::class, 'publishForGuest'])->name('admin.contributions.publish-for-guest');
+        Route::post('/publish-all', [App\Http\Controllers\AdminContributionController::class, 'publishAll'])->name('admin.contributions.publish-all');
         Route::post('/update/{id}', [App\Http\Controllers\AdminContributionController::class, 'update'])->name('admin.contributions.update');
         Route::post('/delete', [App\Http\Controllers\AdminContributionController::class, 'delete'])->name('admin.contributions.delete');
     });
 
 
-    Route::prefix('faculty')->group(function () {
+    Route::prefix('faculty')->middleware('role.auth:Admin')->group(function () {
         Route::get('/', [App\Http\Controllers\AdminFacultyController::class, 'index'])->name('admin.faculty.index');
         Route::post('/store', [App\Http\Controllers\AdminFacultyController::class, 'store'])->name('admin.faculty.store');
         Route::post('/update', [App\Http\Controllers\AdminFacultyController::class, 'update'])->name('admin.faculty.update');
         Route::post('/delete', [App\Http\Controllers\AdminFacultyController::class, 'delete'])->name('admin.faculty.delete');
     });
 
-    Route::prefix('activity-logs')->group(function () {
+    Route::prefix('activity-logs')->middleware('role.auth:Admin')->group(function () {
         Route::get('/', [App\Http\Controllers\AdminActivityLogController::class, 'index'])->name('admin.activity-logs.index');
     });
 
-    Route::prefix('academic-year')->group(function () {
+    Route::prefix('academic-year')->middleware('role.auth:Admin')->group(function () {
         Route::get('/', [App\Http\Controllers\AdminAcademicYearController::class, 'index'])->name('admin.academic-year.index');
         Route::post('/store', [App\Http\Controllers\AdminAcademicYearController::class, 'store'])->name('admin.academic-year.store');
         Route::post('/update', [App\Http\Controllers\AdminAcademicYearController::class, 'update'])->name('admin.academic-year.update');

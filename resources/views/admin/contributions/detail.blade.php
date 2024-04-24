@@ -98,9 +98,19 @@
                                                     @case(0)
                                                         <span class="badge text-bg-warning">Pending</span>
                                                     @break
+
                                                     @case(1)
                                                         <span class="badge text-bg-success">Published</span>
                                                     @break
+
+                                                    @case(2)
+                                                        <span class="badge text-bg-danger">Published For Guest</span>
+                                                    @break
+
+                                                    @case(3)
+                                                        <span class="badge text-bg-primary">Published All</span>
+                                                    @break
+
                                                     @default
                                                         <span class="badge text-bg-warning">Pending</span>
                                                 @endswitch
@@ -122,15 +132,18 @@
                                         </tr>
                                         <tr>
                                             <th>Last modified</th>
-                                            <td>{{ (new DateTime($contribution->updated_at))->format('F d, Y H:i:s') }}</td>
+                                            <td>{{ (new DateTime($contribution->updated_at))->format('F d, Y H:i:s') }}
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <th>Edit</th>
-                                            <td>
-                                                <a href="{{ route('admin.contributions.edit', $contribution->id) }}"
-                                                    class="btn btn-outline-primary">Edit
-                                                    Contribution</a>
-                                            </td>
+                                            @if (!in_array(Auth::user()->role->name, ['Admin', 'Manager']))
+                                                <th>Edit</th>
+                                                <td>
+                                                    <a href="{{ route('admin.contributions.edit', $contribution->id) }}"
+                                                        class="btn btn-outline-primary">Edit
+                                                        Contribution</a>
+                                                </td>
+                                            @endif
                                         </tr>
                                         <tr>
                                             <th>Preview</th>

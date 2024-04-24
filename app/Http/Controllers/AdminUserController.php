@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\UserRoleEnum;
 use App\Models\ActivityLog;
 use App\Mail\UserPasswordMail;
+use App\Models\Contribution;
 use App\Models\Faculty;
 use App\Models\Role;
 use App\Models\User;
@@ -315,6 +316,13 @@ class AdminUserController extends Controller
 
         if ($user->id == Auth::user()->id) {
             toastr()->error('You cannot remove yourself!', 'Error', ['timeOut' => 5000]);
+            return back();
+        }
+
+        $contributionExists = Contribution::where('user_id', '=', $user->id)->first();
+
+        if($contributionExists) {
+            toastr()->error('You cannot delete this student due to existing contributions!', 'Error', ['timeOut' => 5000]);
             return back();
         }
 

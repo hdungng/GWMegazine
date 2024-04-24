@@ -48,11 +48,9 @@
                         </a>
                     @endif
                 </div>
-                <div class="hstack">
-                    <a href="{{ route('home.main-page') }}" class="me-auto">
-                        < Return to main page</a>
-                            <button type="submit" class="btn btn-primary square-btn py-3 px-5 ms-auto">Login</button>
-                </div>
+
+                <button type="submit" class="d-block btn btn-primary square-btn py-3 px-5 ms-auto">Login</button>
+
             </form>
         </div>
     </div>

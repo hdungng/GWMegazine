@@ -57,7 +57,7 @@
                     <div class="col-sm-6 mb-5">
                         <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
                         <input class="form-control @error('title') is-invalid @enderror" id="title" name="title"
-                            type="text" placeholder="Enter contribution title..." value="{{ $contribution->title }}">
+                            type="text" placeholder="Enter contribution title..." value="{{ $contribution->title }}" disabled>
                         @error('title')
                             <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
