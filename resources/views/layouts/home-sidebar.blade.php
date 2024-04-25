@@ -9,7 +9,7 @@
                 Home
             </a>
         </div>
-        @if (Auth::check() && Auth::user()->role->name == 'Student' && $startingDateOpen)
+        @if (Auth::check() && Auth::user()->role->name == 'Student')
             <div
                 class="{{ request()->routeIs('home.contributions.index', 'home.contributions.create', 'home.contributions.detail', 'home.contributions.edit') ? 'active' : '' }} item">
                 <a href="{{ route('home.contributions.index') }}">

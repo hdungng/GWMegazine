@@ -14,7 +14,7 @@
             <div class="heading d-flex justify-content-between align-items-center mb-3">
                 <h1 class="fw-bold">My Contributions</h1>
 
-                @if (!$closedContributionAdd)
+                @if (!$closedContributionAdd && $startingDateOpen)
                     <a href="{{ route('home.contributions.create') }}" class="btn square-btn btn-outline-primary">Add
                         Contribution</a>
                 @endif

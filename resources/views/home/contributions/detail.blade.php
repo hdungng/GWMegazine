@@ -74,7 +74,7 @@
                             <th>Last modified</th>
                             <td>{{ (new DateTime($contribution->updated_at))->format('F d, Y H:i:s') }}</td>
                         </tr>
-                        @if (!$closedContribution)
+                        @if (!$closedContribution && $contribution->status == 0)
                             <tr>
                                 <th>Edit</th>
                                 <td>

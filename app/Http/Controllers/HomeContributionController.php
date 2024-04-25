@@ -126,6 +126,11 @@ class HomeContributionController extends Controller
     {
         $this->currentAcademicYear = AcademicYear::where("status", '=', AcademicYearStatusEnum::SELECTED)->first();
 
+        if (!$this->startingDateOpen) {
+            toastr()->error('Sorry, currently the starting date has not come yet!', 'Error', ['timeOut' => 5000]);
+            return redirect()->back();
+        }
+
         if ($this->closedContributionAdd) {
             toastr()->error('Sorry, currently the closure date is over!', 'Error', ['timeOut' => 5000]);
             return redirect()->back();
@@ -251,6 +256,11 @@ class HomeContributionController extends Controller
 
         if (!$contribution) {
             toastr()->error('Contribution is not found!', 'Error', ['timeOut' => 5000]);
+            return back();
+        }
+
+        if ($contribution->status != 0) {
+            toastr()->error('Contribution is published which cannot edit!', 'Error', ['timeOut' => 5000]);
             return back();
         }
 

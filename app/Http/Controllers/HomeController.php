@@ -24,7 +24,6 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public $startingDateOpen;
 
     public $faculties;
 
@@ -34,11 +33,6 @@ class HomeController extends Controller
         $currentAcademicYear = AcademicYear::where("status", '=', AcademicYearStatusEnum::SELECTED)->first();
         $currentDateTime = Carbon::now();
 
-        if ($currentDateTime->gt($currentAcademicYear->starting_date)) {
-            $this->startingDateOpen = true;
-        } else {
-            $this->startingDateOpen = false;
-        }
         $this->faculties = Faculty::orderBy('created_at', 'desc')->get();
     }
 
@@ -68,7 +62,6 @@ class HomeController extends Controller
 
         return view('home.main-page',  [
             'contributions' => $contributions,
-            'startingDateOpen' => $this->startingDateOpen,
             'faculties' => $this->faculties
         ]);
     }
@@ -89,7 +82,6 @@ class HomeController extends Controller
         return view('home.detail', [
             'contribution' => $contribution,
             'htmlContent' => $htmlContent,
-            'startingDateOpen' => $this->startingDateOpen,
             'faculties' => $this->faculties
         ]);
     }
@@ -132,7 +124,6 @@ class HomeController extends Controller
         return view('home.search', [
             'contributions' => $contributions,
             'query' => $searchQuery,
-            'startingDateOpen' => $this->startingDateOpen,
             'faculties' => $this->faculties
         ]);
     }
@@ -167,7 +158,6 @@ class HomeController extends Controller
         return view('home.filter', [
             'contributions' => $contributions,
             'filterFaculty' => $filterFaculty,
-            'startingDateOpen' => $this->startingDateOpen,
             'faculties' => $this->faculties,
         ]);
     }

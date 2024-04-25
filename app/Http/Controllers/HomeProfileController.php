@@ -10,11 +10,14 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Enums\AcademicYearStatusEnum;
 use App\Models\AcademicYear;
+use App\Models\Faculty;
 use Carbon\Carbon;
 
 class HomeProfileController extends Controller
 {
     //
+    public $faculties;
+
     public $startingDateOpen;
 
     public function __construct()
@@ -27,12 +30,15 @@ class HomeProfileController extends Controller
         } else {
             $this->startingDateOpen = false;
         }
+
+        $this->faculties = Faculty::orderBy('created_at', 'desc')->get();
     }
 
     function index()
     {
         return view("home.user-profile", [
             'startingDateOpen' => $this->startingDateOpen,
+            'faculties' => $this->faculties
         ]);
     }
 

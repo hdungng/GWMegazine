@@ -28,6 +28,7 @@ class AdminDashboardController extends Controller
 
         if (Auth::user()->role_id == UserRoleEnum::ADMIN) {
             return redirect()->route('admin.users.index');
+            
         } else if (Auth::user()->role_id == UserRoleEnum::MANAGER) {
             $chart1 = new ContributionFacultyChart();
             // MANAGER: CHART 1
@@ -117,8 +118,7 @@ class AdminDashboardController extends Controller
 
 
             if (!$currentFaculty) {
-                toastr()->error('This coordinator is not assigned any faculties!', 'Error', ['timeOut' => 5000]);
-                return route('admin.contributions.index');
+                return redirect()->route('admin.contributions.index');
             }
 
             // Chart 1

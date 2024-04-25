@@ -37,10 +37,8 @@
                                                     <div class="like-box hstack gap-3 ms-auto">
                                                         <span><i class="fa-solid fa-heart fa-xl"
                                                                 style="color: #FC6589;"></i></span>
-                                                        <span class="stats-num">50</span>
+                                                        <span class="stats-num">{{ count($contribution->likes) }}</span>
                                                     </div>
-                                                    <span class="share-btn"><i class="fa-solid fa-share-nodes fa-xl"
-                                                            style="color: #95A4DB;"></i></span>
                                                 </div>
                                             </div>
                                         </div>
