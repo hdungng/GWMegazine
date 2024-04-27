@@ -65,7 +65,7 @@ class AdminAcademicYearController extends Controller
         $academicYearModel = new AcademicYear();
         $academicYearModel->id = Str::uuid();
         $academicYearModel->name = $request->name;
-        $academicYearModel->$starting_date = $$starting_date;
+        $academicYearModel->starting_date = $starting_date;
         $academicYearModel->closure_date = $closure_date;
         $academicYearModel->final_closure_date = $final_closure_date;
         $academicYearModel->status = AcademicYearStatusEnum::NOT_SELECTED;

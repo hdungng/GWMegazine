@@ -91,7 +91,7 @@ Route::prefix('admin')->middleware('role.auth:Admin,Manager,Coordinator')->group
         Route::post('/delete', [App\Http\Controllers\AdminFacultyController::class, 'delete'])->name('admin.faculty.delete');
     });
 
-    Route::prefix('activity-logs')->middleware('role.auth:Admin')->group(function () {
+    Route::prefix('activity-logs')->middleware('role.auth:Admin,Manager')->group(function () {
         Route::get('/', [App\Http\Controllers\AdminActivityLogController::class, 'index'])->name('admin.activity-logs.index');
     });
 

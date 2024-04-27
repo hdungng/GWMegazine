@@ -69,7 +69,6 @@ class HomeContributionController extends Controller
     public function index()
     {
         $contributions = Contribution::where("user_id", Auth::user()->id)
-            ->where('academic_year_id', '=', $this->currentAcademicYear->id)
             ->get();
 
         return view(
@@ -312,7 +311,6 @@ class HomeContributionController extends Controller
             return back();
         }
 
-        $contribution->title = $request->title;
         $contribution->description = $request->description;
 
 

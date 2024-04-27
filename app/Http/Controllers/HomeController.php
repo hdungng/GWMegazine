@@ -40,7 +40,7 @@ class HomeController extends Controller
     {
         if (Auth::check()) {
 
-            if (Auth::user()->role_id !=  UserRoleEnum::GUEST) {
+            if (Auth::user()->role_id != UserRoleEnum::GUEST) {
                 $contributions = Contribution::with('likes')
                     ->select('contributions.*', 'users.username AS student_name')
                     ->join('users', 'contributions.user_id', '=', 'users.id')
@@ -51,10 +51,10 @@ class HomeController extends Controller
                 $contributions = Contribution::with('likes')->select('contributions.*', 'users.username AS student_name')
                     ->join('users', 'contributions.user_id', '=', 'users.id')
                     ->where('users.faculty_id', '=', Auth::user()->faculty->id)
-                    ->where('status', '=', ContributionStatusEnum::PUBLISHED_FOR_GUEST)
-                    ->orWhere('status', '=', ContributionStatusEnum::PUBLISHED_ALL)
+                    ->whereIn('contributions.status', [ ContributionStatusEnum::PUBLISHED_FOR_GUEST, ContributionStatusEnum::PUBLISHED_ALL])
                     ->orderBy('created_at', 'desc')
                     ->simplePaginate(15);
+
             }
         } else {
             return redirect()->route('login');

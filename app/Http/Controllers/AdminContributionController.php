@@ -137,7 +137,6 @@ class AdminContributionController extends Controller
             return back();
         }
 
-        $contribution->title = $request->title;
         $contribution->description = $request->description;
 
 
