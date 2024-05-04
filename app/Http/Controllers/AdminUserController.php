@@ -72,7 +72,7 @@ class AdminUserController extends Controller
             'fullname' => 'required|string|max:255|min:3',
             'email' => 'required|string|email|max:255|unique:users',
             'role_id' => 'required|string|not_in:',
-            'avatar' => 'image|mimes:png,jpg,jpeg|square',
+            'avatar' => 'image|mimes:png,jpg,jpeg|max:20000|square',
             'faculty_id' => [Rule::requiredIf(in_array($request->role_id, [UserRoleEnum::STUDENT, UserRoleEnum::GUEST])),],
         ], [
             'required' => ":attribute is required",
@@ -82,6 +82,7 @@ class AdminUserController extends Controller
             'unique' => ":attribute already exists",
             'image' => ":attribute must be an image file in jpeg, png, bmp, or gif format",
             'square' => ":attribute must be a square image",
+            'avatar.max' => 'The :attribute may not be greater than :max kilobytes.',
         ], [
             'username' => "Username",
             'fullname' => "Fullname",
@@ -189,7 +190,7 @@ class AdminUserController extends Controller
         $request->validate([
             'username' => 'required|string|max:255|min:3',
             'fullname' => 'required|string|max:255|min:3',
-            'avatar' => 'image|mimes:png,jpg,jpeg|square',
+            'avatar' => 'image|mimes:png,jpg,jpeg|max:20000|square',
             'faculty_id' => [Rule::requiredIf(in_array($request->role_id, [UserRoleEnum::STUDENT, UserRoleEnum::GUEST])),],
         ], [
             'required' => ":attribute is required",
@@ -198,6 +199,7 @@ class AdminUserController extends Controller
             'unique' => ":attribute already exists",
             'image' => ":attribute must be an image file in jpeg, png, bmp, or gif format",
             'square' => ":attribute must be a square image",
+            'avatar.max' => 'The :attribute may not be greater than :max kilobytes.',
         ], [
             'username' => "Username",
             'fullname' => "Fullname",

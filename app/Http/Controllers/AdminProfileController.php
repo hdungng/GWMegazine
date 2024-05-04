@@ -22,7 +22,7 @@ class AdminProfileController extends Controller
         $request->validate([
             'username' => 'required|string|max:255|min:3',
             'fullname' => 'required|string|max:255|min:3',
-            'avatar' => 'image|mimes:png,jpg,jpeg|square',
+            'avatar' => 'image|mimes:png,jpg,jpeg|max:20000|square',
         ], [
             'required' => ":attribute is required",
             'min' => ":attribute must be at least :min characters long",
@@ -30,6 +30,7 @@ class AdminProfileController extends Controller
             'unique' => ":attribute already exists",
             'image' => ":attribute must be an image file in jpeg, png, bmp, or gif format",
             'square' => ":attribute must be a square image",
+            'avatar.max' => 'The :attribute may not be greater than :max kilobytes.',
         ], [
             'username' => "Username",
             'fullname' => "Fullname",

@@ -47,13 +47,14 @@ class HomeProfileController extends Controller
         $request->validate([
             'username' => 'required|string|max:255|min:3',
             'fullname' => 'required|string|max:255|min:3',
-            'avatar' => 'image|mimes:png,jpg,jpeg|square',
+            'avatar' => 'image|mimes:png,jpg,jpeg|max:20000|square',
         ], [
             'required' => ":attribute is required",
             'min' => ":attribute must be at least :min characters long",
             'max' => ":attribute must be at most :max characters long",
             'unique' => ":attribute already exists",
             'image' => ":attribute must be an image file in jpeg, png, bmp, or gif format",
+            'avatar.max' => 'The :attribute may not be greater than :max kilobytes.',
             'square' => ":attribute must be a square image",
         ], [
             'username' => "Username",

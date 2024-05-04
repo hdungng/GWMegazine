@@ -154,7 +154,7 @@ class HomeContributionController extends Controller
             'title' => 'required|string|max:255|min:3',
             'description' => 'required|string|max:500|min:20',
             'wordDocument' => 'required|mimes:doc,docx',
-            'contributionImage' => 'required|image|mimes:png,jpg,jpeg',
+            'contributionImage' => 'required|image|mimes:png,jpg,jpeg|max:20000',
         ], [
             'document.mimes:doc,docx' => ':attribute must be a Word file (doc/docx).',
             'required' => ":attribute is required",
@@ -162,6 +162,7 @@ class HomeContributionController extends Controller
             'max' => ":attribute must be at most :max characters long",
             'image' => ":attribute must be an image file in jpeg, png, bmp, or gif format",
             'square' => ":attribute must be a square image",
+            'contributionImage.max' => 'The :attribute may not be greater than :max kilobytes.',
         ], [
             'title' => 'Contribution Title',
             'description' => 'Description',
@@ -289,7 +290,7 @@ class HomeContributionController extends Controller
         $request->validate([
             'description' => 'required|string|max:500|min:20',
             'wordDocument' => 'mimes:doc,docx',
-            'contributionImage' => 'image|mimes:png,jpg,jpeg',
+            'contributionImage' => 'image|mimes:png,jpg,jpeg|max:20000',
         ], [
             'document.mimes:doc,docx' => ':attribute must be a Word file (doc/docx).',
             'required' => ":attribute is required",
@@ -297,6 +298,7 @@ class HomeContributionController extends Controller
             'max' => ":attribute must be at most :max characters long",
             'image' => ":attribute must be an image file in jpeg, png, bmp, or gif format",
             'square' => ":attribute must be a square image",
+            'contributionImage.max' => 'The :attribute may not be greater than :max kilobytes.',
         ], [
             'description' => 'Description',
             'wordDocument' => 'Word Document',
